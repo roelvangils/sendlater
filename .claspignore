@@ -1,0 +1,6 @@
+# Push only the manifest and compiled .gs (clasp transpiles .ts in src/)
+**/**
+!appsscript.json
+!src/**/*.ts
+node_modules/**
+.git/**
