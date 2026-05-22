@@ -98,17 +98,29 @@ function sendDraft(
   id: string,
   isCustom: boolean
 ): void {
+  let sentSubject = "(unknown)";
   try {
     clearPrefixesOnDraft(draft, isCustom);
-    const sentSubject = draft.getMessage().getSubject();
+    try {
+      sentSubject = draft.getMessage().getSubject();
+    } catch (_) {
+      // draft ref may already be stale after the strip — keep placeholder
+    }
     draft.send();
     deleteScheduled(id);
     console.log(`Sent draft ${id}: "${sentSubject}"`);
   } catch (err) {
-    const subject = draft.getMessage().getSubject();
+    const errStr = String(err);
+    if (errStr.indexOf("Not found") !== -1) {
+      // Same Apps Script quirk as draft.update(): the API throws "Not found"
+      // even though the send was committed server-side. Treat as success.
+      deleteScheduled(id);
+      console.warn(`Send for ${id} threw "Not found" but mail likely went out`);
+      return;
+    }
     notifyOwner(
       "Send failed",
-      `Failed to send draft "${subject}".\n\nError: ${err}\n\n` +
+      `Failed to send draft "${sentSubject}".\n\nError: ${err}\n\n` +
         `The draft remains scheduled and the next run will retry.`
     );
     console.error(`Failed to send draft ${id}: ${err}`);
