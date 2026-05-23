@@ -336,6 +336,31 @@
     </section>
 
     <section>
+      <h2>Supported email clients</h2>
+      <p>This tool watches Gmail labels on drafts. For it to work directly from your client, that client must let you <strong>apply a Gmail label to a draft without moving the draft out of the Drafts folder</strong>. Surprisingly few clients do this — most IMAP clients turn Gmail labels into folders, so "labeling" actually moves the message.</p>
+
+      <table>
+        <thead>
+          <tr><th>Client</th><th>Own send-later?</th><th>Labels on drafts?</th><th>Use sendlater?</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Mimestream</strong> (macOS)</td><td>No</td><td>Yes (Gmail API)</td><td>⭐ Primary use case</td></tr>
+          <tr><td>Apple Mail (macOS Ventura+, iOS)</td><td>Yes</td><td>No (labels = folders)</td><td>Use built-in scheduling</td></tr>
+          <tr><td>Spark (all platforms)</td><td>Yes</td><td>Yes</td><td>Use Spark's scheduling</td></tr>
+          <tr><td>Gmail web / mobile</td><td>Yes</td><td>Yes</td><td>Use Gmail's scheduling</td></tr>
+          <tr><td>Outlook (new) + Gmail</td><td>No</td><td>No (labels = folders)</td><td>Label via Gmail web (fallback)</td></tr>
+          <tr><td>Outlook (classic)</td><td>Client-side delay only</td><td>No</td><td>Fallback recommended</td></tr>
+          <tr><td>Thunderbird</td><td>Via "Send Later" addon</td><td>No (labels = folders)</td><td>Use the addon</td></tr>
+          <tr><td>Airmail</td><td>Yes</td><td>Varies</td><td>Use Airmail's scheduling</td></tr>
+          <tr><td>Other IMAP clients</td><td>Varies</td><td>Usually no</td><td>Universal fallback</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Universal fallback</h3>
+      <p>Even if your client can't apply Gmail labels to drafts, you can still use sendlater: write the draft in your client, then open <a href="https://mail.google.com">mail.google.com</a> or the Gmail mobile app, find the draft, and apply the <span class="chip">Send Later/…</span> label there. One extra step, works for any client.</p>
+    </section>
+
+    <section>
       <h2>One-time setup</h2>
       <p>The project runs as a Google Apps Script under your own account. No separate server, no OAuth app to register.</p>
       <ol class="steps">

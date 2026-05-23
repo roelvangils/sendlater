@@ -336,6 +336,31 @@
     </section>
 
     <section>
+      <h2>Ondersteunde e-mail clients</h2>
+      <p>Deze tool kijkt naar Gmail-labels op drafts. Om hem rechtstreeks vanuit je e-mail client te gebruiken, moet die client toelaten dat je <strong>een Gmail-label op een draft plakt zonder de draft uit de Drafts-folder te verplaatsen</strong>. Verrassend weinig clients doen dit — de meeste IMAP-clients zetten Gmail-labels om in folders, waardoor "labelen" eigenlijk verplaatsen wordt.</p>
+
+      <table>
+        <thead>
+          <tr><th>Client</th><th>Eigen send-later?</th><th>Labels op drafts?</th><th>Sendlater nodig?</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Mimestream</strong> (macOS)</td><td>Nee</td><td>Ja (Gmail API)</td><td>⭐ Primaire use case</td></tr>
+          <tr><td>Apple Mail (macOS Ventura+, iOS)</td><td>Ja</td><td>Nee (labels = folders)</td><td>Gebruik ingebouwde scheduled send</td></tr>
+          <tr><td>Spark (alle platforms)</td><td>Ja</td><td>Ja</td><td>Gebruik Spark's scheduled send</td></tr>
+          <tr><td>Gmail web / mobile</td><td>Ja</td><td>Ja</td><td>Gebruik Gmail's scheduled send</td></tr>
+          <tr><td>Outlook (new) + Gmail</td><td>Nee</td><td>Nee (labels = folders)</td><td>Label via Gmail-web (fallback)</td></tr>
+          <tr><td>Outlook (classic)</td><td>Alleen client-side delay</td><td>Nee</td><td>Fallback aangeraden</td></tr>
+          <tr><td>Thunderbird</td><td>Via "Send Later" addon</td><td>Nee (labels = folders)</td><td>Gebruik de addon</td></tr>
+          <tr><td>Airmail</td><td>Ja</td><td>Wisselend</td><td>Gebruik Airmail's scheduled send</td></tr>
+          <tr><td>Andere IMAP-clients</td><td>Wisselend</td><td>Meestal niet</td><td>Universele fallback</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Universele fallback</h3>
+      <p>Ook al kan je client geen Gmail-labels op drafts plakken, je kunt sendlater nog steeds gebruiken: schrijf de draft in je gewone client, open daarna <a href="https://mail.google.com">mail.google.com</a> of de Gmail-mobiele app, zoek de draft op, en plak daar het <span class="chip">Send Later/…</span>-label. Eén extra handeling, maar werkt voor élke client.</p>
+    </section>
+
+    <section>
       <h2>Eenmalige setup</h2>
       <p>Het project draait als een Google Apps Script onder je eigen account. Geen aparte server, geen OAuth-app om te registreren.</p>
       <ol class="steps">

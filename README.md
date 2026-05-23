@@ -15,6 +15,32 @@ no OAuth app to register. Works while your Mac is off.
      so you can see when it'll go out.
    - On send time → strips the prefix and sends. State auto-cleaned.
 
+## Supported email clients
+
+This tool watches Gmail labels on drafts. For it to work directly from your
+client, that client must let you **apply a Gmail label to a draft without moving
+the draft out of the Drafts folder**. Surprisingly few clients do this — most
+IMAP clients turn Gmail labels into folders, so "labeling" actually moves the
+message.
+
+| Client | Own scheduled send? | Can label drafts? | Use sendlater? |
+|---|---|---|---|
+| **Mimestream** (macOS) | No | Yes (Gmail API) | ⭐ Primary use case |
+| Apple Mail (macOS Ventura+, iOS) | Yes | No (labels = folders) | Use built-in scheduling |
+| Spark (all platforms) | Yes | Yes | Use Spark's scheduling |
+| Gmail web / mobile | Yes | Yes | Use Gmail's scheduling |
+| Outlook (new) + Gmail | No | No (labels = folders) | Label via Gmail web (fallback) |
+| Outlook (classic) | Client-side delay only | No | Fallback recommended |
+| Thunderbird | Via "Send Later" addon | No (labels = folders) | Use the addon |
+| Airmail | Yes | Varies | Use Airmail's scheduling |
+| Other IMAP clients | Varies | Usually no | Universal fallback |
+
+**Universal fallback.** Even if your client can't apply Gmail labels to drafts,
+you can still use sendlater: write the draft in your client, then open
+[mail.google.com](https://mail.google.com) or the Gmail mobile app, find the
+draft, and apply the `Send Later/…` label there. One extra step, works for any
+client.
+
 ## Labels
 
 ```
