@@ -105,6 +105,22 @@ That's it. From now on, label a draft and forget about it.
 - `src/setup.ts` — one-time helpers (`installTrigger`, `ensureLabels`).
 - `src/audit.ts` — `auditScheduled()` lists all scheduled drafts with their times.
 
+## Documentation site
+
+The user guide is built from Markdown sources:
+
+- `docs-src/template.html` — CSS shell + placeholders.
+- `docs-src/en.md` / `docs-src/nl.md` — content (Markdown with inline HTML for mockups, label cards, FAQ).
+- `build-docs.mjs` — Node script that runs `markdown-it` over the sources and writes `docs/index.html` and `docs/handleiding.html`.
+
+To regenerate after editing the sources:
+
+```bash
+npm run docs:build
+```
+
+The `docs/` folder is the committed build output served by GitHub Pages at https://roelvangils.github.io/sendlater/.
+
 ## Observability
 
 - `npm run logs` — tail Apps Script logs.

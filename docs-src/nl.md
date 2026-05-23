@@ -1,408 +1,41 @@
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>sendlater — Handleiding</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 16px;
-      line-height: 1.6;
-      color: #1d1d1f;
-      background: #fafafa;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    main {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 56px 32px 96px;
-      position: relative;
-    }
-
-    .lang-switch {
-      position: absolute;
-      top: 32px;
-      right: 32px;
-      font-size: 0.85rem;
-      display: flex;
-      gap: 2px;
-      align-items: center;
-    }
-    .lang-switch a {
-      color: #6e6e73;
-      text-decoration: none;
-      border-bottom: none;
-      padding: 4px 10px;
-      border-radius: 4px;
-      transition: background 0.15s, color 0.15s;
-    }
-    .lang-switch a:hover {
-      background: #f0f0f0;
-      color: #1d1d1f;
-    }
-    .lang-switch a[aria-current="page"] {
-      color: #1d1d1f;
-      font-weight: 600;
-      background: #f0f0f0;
-    }
-    @media (max-width: 600px) {
-      .lang-switch {
-        position: static;
-        margin-bottom: 16px;
-        justify-content: flex-end;
-      }
-    }
-
-    h1 {
-      font-size: 2.4rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin: 0 0 8px;
-    }
-    h2 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      margin: 72px 0 16px;
-    }
-    h3 {
-      font-size: 1.05rem;
-      font-weight: 600;
-      margin: 32px 0 8px;
-    }
-    p { margin: 12px 0; }
-
-    .lede {
-      font-size: 1.15rem;
-      color: #6e6e73;
-      margin: 0 0 24px;
-      font-weight: 400;
-    }
-
-    a {
-      color: #0066cc;
-      text-decoration: none;
-      border-bottom: 1px solid rgba(0, 102, 204, 0.25);
-      transition: border-color 0.15s;
-    }
-    a:hover { border-bottom-color: #0066cc; }
-
-    code, .mono {
-      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-    }
-    code {
-      background: #eef0f2;
-      padding: 1px 6px;
-      border-radius: 4px;
-      font-size: 0.88em;
-      color: #1d1d1f;
-    }
-    pre {
-      background: #f4f4f6;
-      border: 1px solid #e5e5e7;
-      border-radius: 8px;
-      padding: 14px 16px;
-      overflow-x: auto;
-      font-size: 0.9rem;
-      line-height: 1.55;
-      margin: 12px 0;
-    }
-    pre code {
-      background: none;
-      padding: 0;
-      font-size: 1em;
-    }
-
-    .chip {
-      display: inline-block;
-      padding: 2px 10px;
-      background: #f0f0f0;
-      border: 1px solid #d8d8d8;
-      border-radius: 4px;
-      font-family: ui-monospace, SFMono-Regular, monospace;
-      font-size: 13px;
-      line-height: 1.5;
-      color: #1d1d1f;
-      white-space: nowrap;
-      vertical-align: baseline;
-    }
-
-    .label-card {
-      padding: 20px 24px;
-      border: 1px solid #e5e5e7;
-      border-radius: 12px;
-      background: white;
-      margin: 16px 0;
-    }
-    .label-card-header {
-      margin-bottom: 8px;
-    }
-    .label-card p { margin: 6px 0; }
-    .label-card strong {
-      color: #1d1d1f;
-      font-weight: 600;
-    }
-
-    .mockup {
-      background: white;
-      border: 1px solid #d8d8d8;
-      border-radius: 10px;
-      margin: 16px 0;
-      overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-    }
-    .mockup-titlebar {
-      background: #ececec;
-      padding: 10px 14px;
-      border-bottom: 1px solid #d8d8d8;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .mockup-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      display: inline-block;
-    }
-    .mockup-dot.red { background: #ff5f57; }
-    .mockup-dot.yellow { background: #febc2e; }
-    .mockup-dot.green { background: #28c840; }
-    .mockup-body {
-      padding: 16px 20px;
-      font-size: 0.95rem;
-    }
-    .mockup-row {
-      display: flex;
-      padding: 4px 0;
-      gap: 12px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .mockup-label {
-      color: #6e6e73;
-      min-width: 70px;
-      flex-shrink: 0;
-    }
-    .mockup-value {
-      flex: 1;
-      min-width: 0;
-    }
-    .mockup-value.subject {
-      font-family: ui-monospace, SFMono-Regular, monospace;
-      font-size: 0.92em;
-      word-break: break-word;
-    }
-    .mockup-caption {
-      font-size: 0.85rem;
-      color: #6e6e73;
-      margin: 8px 0 4px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 16px 0;
-      font-size: 0.92rem;
-    }
-    th, td {
-      text-align: left;
-      padding: 10px 12px;
-      border-bottom: 1px solid #efefef;
-      vertical-align: top;
-    }
-    th {
-      font-weight: 600;
-      border-bottom: 2px solid #d8d8d8;
-      background: #f7f7f7;
-    }
-    td code { font-size: 0.95em; }
-
-    .faq details {
-      border-bottom: 1px solid #e5e5e7;
-    }
-    .faq details:first-of-type {
-      border-top: 1px solid #e5e5e7;
-    }
-    .faq summary {
-      font-weight: 500;
-      padding: 16px 0;
-      cursor: pointer;
-      list-style: none;
-      position: relative;
-      padding-right: 32px;
-      color: #1d1d1f;
-    }
-    .faq summary::-webkit-details-marker { display: none; }
-    .faq summary::after {
-      content: "▸";
-      position: absolute;
-      right: 8px;
-      top: 16px;
-      color: #6e6e73;
-      font-size: 0.9rem;
-    }
-    .faq details[open] summary::after { content: "▾"; }
-    .faq-body {
-      padding: 0 0 16px;
-      color: #1d1d1f;
-    }
-    .faq-body > p:first-child { margin-top: 0; }
-    .faq-body > p:last-child { margin-bottom: 0; }
-
-    .steps {
-      counter-reset: step;
-      list-style: none;
-      padding: 0;
-      margin: 24px 0;
-    }
-    .steps > li {
-      counter-increment: step;
-      position: relative;
-      padding: 14px 0 14px 52px;
-      border-bottom: 1px solid #efefef;
-    }
-    .steps > li::before {
-      content: counter(step);
-      position: absolute;
-      left: 0;
-      top: 16px;
-      width: 32px;
-      height: 32px;
-      background: #1d1d1f;
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 0.85rem;
-    }
-    .steps > li:last-child { border-bottom: none; }
-    .steps > li > strong:first-child { display: inline; }
-
-    .note {
-      background: #fff8e6;
-      border-left: 3px solid #f5c518;
-      padding: 12px 16px;
-      margin: 16px 0;
-      font-size: 0.95rem;
-      border-radius: 0 6px 6px 0;
-    }
-    .note strong { font-weight: 600; }
-
-    footer {
-      margin-top: 96px;
-      padding-top: 24px;
-      border-top: 1px solid #e5e5e7;
-      font-size: 0.9rem;
-      color: #6e6e73;
-    }
-    footer p { margin: 6px 0; }
-
-    @media (max-width: 600px) {
-      main { padding: 32px 20px 64px; }
-      h1 { font-size: 1.9rem; }
-      h2 { font-size: 1.3rem; margin-top: 56px; }
-      table { font-size: 0.85rem; }
-      .mockup-label { min-width: 56px; }
-    }
-  </style>
-</head>
-<body>
-  <main>
-    <nav class="lang-switch" aria-label="Language">
-      <a href="index.html">EN</a>
-      <a href="handleiding.html" aria-current="page">NL</a>
-    </nav>
 <header>
 <h1>sendlater</h1>
 <p class="lede">Stuur Gmail-berichten later via een label op je concept.</p>
 <p>Mimestream heeft (nog) geen "schedule send"-functie. Gmail wel — maar alleen via de webinterface. <strong>sendlater</strong> overbrugt dat: schrijf je mail als concept in Mimestream, plak er een label op, en de mail vertrekt op het juiste moment. Ook als je Mac uit staat.</p>
 </header>
-<h2>Hoe werkt het</h2>
+
+## Hoe werkt het
+
 <ol class="steps">
 <li><strong>Schrijf een concept in Mimestream.</strong> Net zoals een gewone mail — ontvanger, onderwerp, inhoud.</li>
 <li><strong>Plak een label uit de <span class="chip">Send Later/…</span>-reeks.</strong> Bijvoorbeeld <span class="chip">Send Later/Tomorrow</span>. Klaar.</li>
 <li><strong>Vergeet erover.</strong> Google's servers controleren elke 10 minuten welke gelabelde concepten verstuurd moeten worden, en doen dat op het juiste tijdstip. Je laptop hoeft niet aan te staan.</li>
 </ol>
-<h2>Ondersteunde e-mail clients</h2>
-<p>Deze tool kijkt naar Gmail-labels op drafts. Om hem rechtstreeks vanuit je e-mail client te gebruiken, moet die client toelaten dat je <strong>een Gmail-label op een draft plakt zonder de draft uit de Drafts-folder te verplaatsen</strong>. Verrassend weinig clients doen dit — de meeste IMAP-clients zetten Gmail-labels om in folders, waardoor &quot;labelen&quot; eigenlijk verplaatsen wordt.</p>
-<table>
-<thead>
-<tr>
-<th>Client</th>
-<th>Eigen send-later?</th>
-<th>Labels op drafts?</th>
-<th>Sendlater nodig?</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Mimestream</strong> (macOS)</td>
-<td>Nee</td>
-<td>Ja (Gmail API)</td>
-<td>⭐ Primaire use case</td>
-</tr>
-<tr>
-<td>Apple Mail (macOS Ventura+, iOS)</td>
-<td>Ja</td>
-<td>Nee (labels = folders)</td>
-<td>Gebruik ingebouwde scheduled send</td>
-</tr>
-<tr>
-<td>Spark (alle platforms)</td>
-<td>Ja</td>
-<td>Ja</td>
-<td>Gebruik Spark's scheduled send</td>
-</tr>
-<tr>
-<td>Gmail web / mobile</td>
-<td>Ja</td>
-<td>Ja</td>
-<td>Gebruik Gmail's scheduled send</td>
-</tr>
-<tr>
-<td>Outlook (new) + Gmail</td>
-<td>Nee</td>
-<td>Nee (labels = folders)</td>
-<td>Label via Gmail-web (fallback)</td>
-</tr>
-<tr>
-<td>Outlook (classic)</td>
-<td>Alleen client-side delay</td>
-<td>Nee</td>
-<td>Fallback aangeraden</td>
-</tr>
-<tr>
-<td>Thunderbird</td>
-<td>Via &quot;Send Later&quot; addon</td>
-<td>Nee (labels = folders)</td>
-<td>Gebruik de addon</td>
-</tr>
-<tr>
-<td>Airmail</td>
-<td>Ja</td>
-<td>Wisselend</td>
-<td>Gebruik Airmail's scheduled send</td>
-</tr>
-<tr>
-<td>Andere IMAP-clients</td>
-<td>Wisselend</td>
-<td>Meestal niet</td>
-<td>Universele fallback</td>
-</tr>
-</tbody>
-</table>
-<h3>Universele fallback</h3>
-<p>Ook al kan je client geen Gmail-labels op drafts plakken, je kunt sendlater nog steeds gebruiken: schrijf de draft in je gewone client, open daarna <a href="https://mail.google.com">mail.google.com</a> of de Gmail-mobiele app, zoek de draft op, en plak daar het <span class="chip">Send Later/…</span>-label. Eén extra handeling, maar werkt voor élke client.</p>
-<h2>Eenmalige setup</h2>
-<p>Het project draait als een Google Apps Script onder je eigen account. Geen aparte server, geen OAuth-app om te registreren.</p>
+
+## Ondersteunde e-mail clients
+
+Deze tool kijkt naar Gmail-labels op drafts. Om hem rechtstreeks vanuit je e-mail client te gebruiken, moet die client toelaten dat je **een Gmail-label op een draft plakt zonder de draft uit de Drafts-folder te verplaatsen**. Verrassend weinig clients doen dit — de meeste IMAP-clients zetten Gmail-labels om in folders, waardoor "labelen" eigenlijk verplaatsen wordt.
+
+| Client | Eigen send-later? | Labels op drafts? | Sendlater nodig? |
+|---|---|---|---|
+| **Mimestream** (macOS) | Nee | Ja (Gmail API) | ⭐ Primaire use case |
+| Apple Mail (macOS Ventura+, iOS) | Ja | Nee (labels = folders) | Gebruik ingebouwde scheduled send |
+| Spark (alle platforms) | Ja | Ja | Gebruik Spark's scheduled send |
+| Gmail web / mobile | Ja | Ja | Gebruik Gmail's scheduled send |
+| Outlook (new) + Gmail | Nee | Nee (labels = folders) | Label via Gmail-web (fallback) |
+| Outlook (classic) | Alleen client-side delay | Nee | Fallback aangeraden |
+| Thunderbird | Via "Send Later" addon | Nee (labels = folders) | Gebruik de addon |
+| Airmail | Ja | Wisselend | Gebruik Airmail's scheduled send |
+| Andere IMAP-clients | Wisselend | Meestal niet | Universele fallback |
+
+### Universele fallback
+
+Ook al kan je client geen Gmail-labels op drafts plakken, je kunt sendlater nog steeds gebruiken: schrijf de draft in je gewone client, open daarna [mail.google.com](https://mail.google.com) of de Gmail-mobiele app, zoek de draft op, en plak daar het <span class="chip">Send Later/…</span>-label. Eén extra handeling, maar werkt voor élke client.
+
+## Eenmalige setup
+
+Het project draait als een Google Apps Script onder je eigen account. Geen aparte server, geen OAuth-app om te registreren.
+
 <ol class="steps">
 <li>
 <strong>Installeer de dependencies.</strong>
@@ -423,93 +56,82 @@ npx clasp push</code></pre>
 </ul>
 </li>
 </ol>
-<p>Vanaf dat moment hoef je het script nooit meer aan te raken.</p>
-<h2>De labels</h2>
-<p>Plak één label per concept. Combineer eventueel met <span class="chip">Send Later/Hold</span> om een geplande mail tijdelijk te pauzeren.</p>
+
+Vanaf dat moment hoef je het script nooit meer aan te raken.
+
+## De labels
+
+Plak één label per concept. Combineer eventueel met <span class="chip">Send Later/Hold</span> om een geplande mail tijdelijk te pauzeren.
+
 <div class="label-card">
 <div class="label-card-header"><span class="chip">Send Later/Tonight</span></div>
 <p><strong>Wat:</strong> vanavond om 20:00.</p>
 <p><strong>Wanneer:</strong> als je iets pas na de werkdag wil laten aankomen — perfect voor "ik schrijf nu maar wil dat het niet meteen op een mailbox valt". Als het al ná 20:00 is wanneer je labelt, schuift de geplande tijd door naar morgenavond 20:00.</p>
 </div>
+
 <div class="label-card">
 <div class="label-card-header"><span class="chip">Send Later/Tomorrow</span></div>
 <p><strong>Wat:</strong> morgenochtend om 09:00.</p>
 <p><strong>Wanneer:</strong> verreweg het meest gebruikt. Voor mails die je 's avonds schrijft maar die je collega tijdens kantooruren wil zien. Weekend wordt automatisch overgeslagen — een vrijdag-laat label = maandag 09:00, geen aparte instelling nodig.</p>
 </div>
+
 <div class="label-card">
 <div class="label-card-header"><span class="chip">Send Later/Monday</span></div>
 <p><strong>Wat:</strong> de eerstvolgende maandag om 09:00.</p>
 <p><strong>Wanneer:</strong> voor onderwerpen die best aan het begin van de week landen — een wekelijkse update, een opvolging die je niet voor het weekend wil sturen.</p>
 </div>
+
 <div class="label-card">
 <div class="label-card-header"><span class="chip">Send Later/Custom</span></div>
 <p><strong>Wat:</strong> een specifieke datum en/of tijd, opgegeven aan het begin van het onderwerp.</p>
 <p><strong>Wanneer:</strong> als geen van de standaardlabels past — bijvoorbeeld een verjaardagsmail op 15 juni, of een follow-up over 3 dagen om 14:00. Zie hieronder voor de syntax.</p>
 </div>
+
 <div class="label-card">
 <div class="label-card-header"><span class="chip">Send Later/Hold</span></div>
 <p><strong>Wat:</strong> pauzeer een geplande mail zonder de planning te verliezen.</p>
 <p><strong>Wanneer:</strong> je hebt een mail klaargezet voor morgen maar twijfelt nog. Plak <code>Hold</code> erbij — het script slaat de mail over zolang dit label aanwezig is. Haal <code>Hold</code> weg en de mail vertrekt alsnog op het oorspronkelijk geplande tijdstip.</p>
 </div>
+
 <div class="label-card">
 <div class="label-card-header"><span class="chip">Send Later/Test</span></div>
 <p><strong>Wat:</strong> verstuur over 2 minuten.</p>
 <p><strong>Wanneer:</strong> uitsluitend om de tool zelf te testen, bijvoorbeeld na een wijziging. Niet voor echte mails — verkeerde labelkeuze stuurt je mail binnen enkele minuten de wereld in.</p>
 </div>
-<h2>Custom: precieze tijden via het onderwerp</h2>
-<p>Bij <span class="chip">Send Later/Custom</span> wordt de geplande tijd uit het onderwerp gelezen. Plaats een token aan het begin van het onderwerp tussen vierkante haken:</p>
-<pre><code>[send: 2026-06-15 14:30] Vergaderingsvoorstel
-</code></pre>
-<p>Bij het verzenden wordt het token automatisch verwijderd, dus de ontvanger ziet alleen &quot;Vergaderingsvoorstel&quot;.</p>
-<h3>Ondersteunde formaten</h3>
-<table>
-<thead>
-<tr>
-<th>Token</th>
-<th>Wat het oplevert</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>[send: 2026-06-15 14:30]</code></td>
-<td>15 juni 2026 om 14:30 (lokale tijd, Brussel)</td>
-</tr>
-<tr>
-<td><code>[send: 2026-06-15]</code></td>
-<td>15 juni 2026 om 09:00 (standaarduur)</td>
-</tr>
-<tr>
-<td><code>[send: +3d]</code></td>
-<td>Over 3 dagen, om 09:00</td>
-</tr>
-<tr>
-<td><code>[send: +2h]</code></td>
-<td>Over precies 2 uur (datum en uur op de seconde)</td>
-</tr>
-<tr>
-<td><code>[send: mon 14:00]</code></td>
-<td>Eerstvolgende maandag om 14:00</td>
-</tr>
-<tr>
-<td><code>[send: fri]</code></td>
-<td>Eerstvolgende vrijdag om 09:00</td>
-</tr>
-<tr>
-<td><code>[send: tomorrow 18:00]</code></td>
-<td>Morgen om 18:00</td>
-</tr>
-<tr>
-<td><code>[send: tonight]</code></td>
-<td>Vanavond 20:00 (zelfde regel als <span class="chip">Tonight</span>)</td>
-</tr>
-</tbody>
-</table>
+
+## Custom: precieze tijden via het onderwerp
+
+Bij <span class="chip">Send Later/Custom</span> wordt de geplande tijd uit het onderwerp gelezen. Plaats een token aan het begin van het onderwerp tussen vierkante haken:
+
+```
+[send: 2026-06-15 14:30] Vergaderingsvoorstel
+```
+
+Bij het verzenden wordt het token automatisch verwijderd, dus de ontvanger ziet alleen "Vergaderingsvoorstel".
+
+### Ondersteunde formaten
+
+| Token | Wat het oplevert |
+|---|---|
+| `[send: 2026-06-15 14:30]` | 15 juni 2026 om 14:30 (lokale tijd, Brussel) |
+| `[send: 2026-06-15]` | 15 juni 2026 om 09:00 (standaarduur) |
+| `[send: +3d]` | Over 3 dagen, om 09:00 |
+| `[send: +2h]` | Over precies 2 uur (datum en uur op de seconde) |
+| `[send: mon 14:00]` | Eerstvolgende maandag om 14:00 |
+| `[send: fri]` | Eerstvolgende vrijdag om 09:00 |
+| `[send: tomorrow 18:00]` | Morgen om 18:00 |
+| `[send: tonight]` | Vanavond 20:00 (zelfde regel als <span class="chip">Tonight</span>) |
+
 <div class="note">
 <strong>Onparsbaar token?</strong> Dan krijg je een <code>[sendlater] Could not parse</code>-mail in je inbox. Het concept blijft staan en wordt niet verstuurd. Pas het onderwerp aan en de volgende trigger-run pikt het opnieuw op.
 </div>
-<h2>Voorbeelden van onderwerpregels</h2>
-<p>Zodra een gelabeld concept gedetecteerd wordt, krijgt het onderwerp een <code>[→ …]</code>-prefix met de geplande tijd. Dat is alleen voor jou zichtbaar — vlak voor het verzenden wordt de prefix weer gestript.</p>
-<h3>Voorbeeld 1 — Send Later/Tomorrow op een zaterdag</h3>
+
+## Voorbeelden van onderwerpregels
+
+Zodra een gelabeld concept gedetecteerd wordt, krijgt het onderwerp een `[→ …]`-prefix met de geplande tijd. Dat is alleen voor jou zichtbaar — vlak voor het verzenden wordt de prefix weer gestript.
+
+### Voorbeeld 1 — Send Later/Tomorrow op een zaterdag
+
 <p class="mockup-caption"><strong>a)</strong> Concept met label, nog vóór de eerstvolgende trigger-run:</p>
 <div class="mockup">
 <div class="mockup-titlebar">
@@ -529,6 +151,7 @@ npx clasp push</code></pre>
 </div>
 </div>
 </div>
+
 <p class="mockup-caption"><strong>b)</strong> Na detectie (weekend werd overgeslagen → maandag 09:00):</p>
 <div class="mockup">
 <div class="mockup-titlebar">
@@ -548,6 +171,7 @@ npx clasp push</code></pre>
 </div>
 </div>
 </div>
+
 <p class="mockup-caption"><strong>c)</strong> Aangekomen bij de ontvanger op maandagochtend:</p>
 <div class="mockup">
 <div class="mockup-titlebar">
@@ -566,7 +190,9 @@ npx clasp push</code></pre>
 </div>
 </div>
 </div>
-<h3>Voorbeeld 2 — Send Later/Custom met token</h3>
+
+### Voorbeeld 2 — Send Later/Custom met token
+
 <p class="mockup-caption"><strong>a)</strong> Concept met token in het onderwerp en het Custom-label:</p>
 <div class="mockup">
 <div class="mockup-titlebar">
@@ -586,6 +212,7 @@ npx clasp push</code></pre>
 </div>
 </div>
 </div>
+
 <p class="mockup-caption"><strong>b)</strong> Na detectie (token gestript, prefix toegevoegd):</p>
 <div class="mockup">
 <div class="mockup-titlebar">
@@ -605,6 +232,7 @@ npx clasp push</code></pre>
 </div>
 </div>
 </div>
+
 <p class="mockup-caption"><strong>c)</strong> Aangekomen op 15 juni 14:30:</p>
 <div class="mockup">
 <div class="mockup-titlebar">
@@ -623,16 +251,24 @@ npx clasp push</code></pre>
 </div>
 </div>
 </div>
-<h2>Wat staat er gepland?</h2>
-<p>In de Apps Script-IDE kun je op elk moment de functie <code>auditScheduled</code> draaien (functie-dropdown → <code>auditScheduled</code> → ▶ Run). Die geeft een chronologisch overzicht van alle ingeplande concepten in de Execution log:</p>
-<pre><code>[2026-05-25T07:00:00.000Z]  Send Later/Tomorrow  | &quot;Vergaderingsvoorstel&quot;
-[2026-05-27T12:30:00.000Z]  Send Later/Custom    | &quot;Follow-up X&quot;
-[2026-06-01T07:00:00.000Z]  Send Later/Monday    | &quot;Maandag-update&quot;
+
+## Wat staat er gepland?
+
+In de Apps Script-IDE kun je op elk moment de functie `auditScheduled` draaien (functie-dropdown → `auditScheduled` → ▶ Run). Die geeft een chronologisch overzicht van alle ingeplande concepten in de Execution log:
+
+```
+[2026-05-25T07:00:00.000Z]  Send Later/Tomorrow  | "Vergaderingsvoorstel"
+[2026-05-27T12:30:00.000Z]  Send Later/Custom    | "Follow-up X"
+[2026-06-01T07:00:00.000Z]  Send Later/Monday    | "Maandag-update"
 Total: 3 entries.
-</code></pre>
-<p>Handig voor een wekelijkse review — staat er iets dat je toch niet meer wil versturen, plak <span class="chip">Send Later/Hold</span> erop of haal het tijdslabel weg.</p>
-<h2>Veelgestelde vragen</h2>
+```
+
+Handig voor een wekelijkse review — staat er iets dat je toch niet meer wil versturen, plak <span class="chip">Send Later/Hold</span> erop of haal het tijdslabel weg.
+
+## Veelgestelde vragen
+
 <section class="faq">
+
 <details>
 <summary>Wat als ik het label per ongeluk verwijder?</summary>
 <div class="faq-body">
@@ -640,6 +276,7 @@ Total: 3 entries.
 <p>Je kunt het label gewoon opnieuw plakken om alsnog in te plannen, met dien verstande dat de tijd opnieuw berekend wordt op het moment van re-labelen.</p>
 </div>
 </details>
+
 <details>
 <summary>Kan ik de geplande tijd nog wijzigen nadat ik gelabeld heb?</summary>
 <div class="faq-body">
@@ -652,6 +289,7 @@ Total: 3 entries.
 </ul>
 </div>
 </details>
+
 <details>
 <summary>Wat als de tool het [send: …]-token niet kan parsen?</summary>
 <div class="faq-body">
@@ -659,6 +297,7 @@ Total: 3 entries.
 <p>Om mail-spam te vermijden krijg je per concept maar één waarschuwing, tenzij je het onderwerp daarna wijzigt — dan kan er een nieuwe waarschuwing volgen.</p>
 </div>
 </details>
+
 <details>
 <summary>Wat doet Send Later/Hold precies?</summary>
 <div class="faq-body">
@@ -667,12 +306,14 @@ Total: 3 entries.
 <p>Heb je alleen <code>Hold</code> (zonder tijdslabel)? Dan gebeurt er niks — een handige manier om een concept "in de wachtkamer" te zetten zonder iets concreets te plannen.</p>
 </div>
 </details>
+
 <details>
 <summary>Wat als mijn Mac uit staat tijdens het verzendmoment?</summary>
 <div class="faq-body">
 <p>Geen probleem. Het script draait op Google's eigen servers, getriggerd door een time-based trigger die je tijdens de eenmalige setup hebt geregistreerd. Je laptop is alleen nodig om concepten te schrijven en labels te plakken — niet voor het verzenden zelf.</p>
 </div>
 </details>
+
 <details>
 <summary>Wordt het [→ …]-prefix mee verstuurd naar de ontvanger?</summary>
 <div class="faq-body">
@@ -680,12 +321,14 @@ Total: 3 entries.
 <p>Hetzelfde geldt voor het <code>[send: …]</code>-token bij Custom: ook dat wordt gestript voordat de mail vertrekt.</p>
 </div>
 </details>
+
 <details>
 <summary>Mag ik het concept nog aanpassen na het labelen?</summary>
 <div class="faq-body">
 <p>Ja. Het script verstuurt altijd de <em>huidige</em> inhoud van het concept op het moment van verzenden — niet een snapshot van toen je labelde. Tot vlak voor het geplande tijdstip kan je de tekst, ontvangers en bijlagen nog aanpassen.</p>
 </div>
 </details>
+
 <details>
 <summary>Wat als verzenden mislukt (bv. quotum overschreden)?</summary>
 <div class="faq-body">
@@ -693,6 +336,7 @@ Total: 3 entries.
 <p>De meest voorkomende oorzaak is het dagelijks quotum: 100 mails/dag op gratis Gmail, 1500 op Workspace. Het quotum reset elke 24 uur.</p>
 </div>
 </details>
+
 <details>
 <summary>Wat als ik twee Send Later/*-labels tegelijk plak?</summary>
 <div class="faq-body">
@@ -700,6 +344,7 @@ Total: 3 entries.
 <p>Uitzondering: <span class="chip">Send Later/Hold</span> mag wél naast een tijdslabel staan. Hold gedraagt zich namelijk niet als een tijdslabel maar als een schakelaar (zie hierboven).</p>
 </div>
 </details>
+
 <details>
 <summary>Wat is het verschil tussen Send Later/Tomorrow op vrijdag versus zaterdag?</summary>
 <div class="faq-body">
@@ -713,12 +358,10 @@ Total: 3 entries.
 <p>Als je écht "morgen" bedoelt ongeacht weekdag, gebruik <span class="chip">Send Later/Custom</span> met <code>[send: tomorrow]</code> of een expliciete datum.</p>
 </div>
 </details>
+
 </section>
+
 <footer>
 <p>Broncode: <a href="https://github.com/roelvangils/sendlater">github.com/roelvangils/sendlater</a></p>
 <p>Quota: 100 mails/dag op gratis Gmail, 1500 op Workspace. Trigger-granulariteit: 10 minuten — feitelijke verzendtijd is geplande tijd ± 10 min.</p>
 </footer>
-
-  </main>
-</body>
-</html>
