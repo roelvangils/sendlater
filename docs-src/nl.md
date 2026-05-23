@@ -9,7 +9,7 @@
 <ol class="steps">
 <li><strong>Schrijf een concept in Mimestream.</strong> Net zoals een gewone mail — ontvanger, onderwerp, inhoud.</li>
 <li><strong>Plak een label uit de <span class="chip">Send Later/…</span>-reeks.</strong> Bijvoorbeeld <span class="chip">Send Later/Tomorrow</span>. Klaar.</li>
-<li><strong>Vergeet erover.</strong> Google's servers controleren elke 10 minuten welke gelabelde concepten verstuurd moeten worden, en doen dat op het juiste tijdstip. Je laptop hoeft niet aan te staan.</li>
+<li><strong>Niks meer te doen.</strong> Google's servers checken elke 10 minuten of er gelabelde concepten klaarstaan, en versturen ze op het juiste tijdstip. Je laptop hoeft niet aan te staan.</li>
 </ol>
 
 ## Ondersteunde e-mail clients
