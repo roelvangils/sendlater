@@ -1,7 +1,24 @@
-const VISIBILITY_PREFIX_REGEX = /^\[→[^\]]*\]\s*/;
+const VISIBILITY_ICON = "􀧞";
+const VISIBILITY_SEP = "——";
 
-const WEEKDAY_NL = ["zo", "ma", "di", "wo", "do", "vr", "za"];
-const MONTH_NL = ["jan", "feb", "mrt", "apr", "mei", "jun", "jul", "aug", "sep", "okt", "nov", "dec"];
+// Matches the current `􀧞 <when> —— ` prefix, as well as the legacy `[→ ...]`
+// form, so drafts that were prefixed under v2.0 still strip cleanly during
+// migration.
+const VISIBILITY_PREFIX_REGEX = /^(?:􀧞 [^—]*?—— |\[→[^\]]*\]\s*)/u;
+
+const WEEKDAY_EN = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+const MONTH_EN = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+];
 
 function pad2(n: number): string {
   return n < 10 ? "0" + n : "" + n;
@@ -19,10 +36,10 @@ function formatShortTime(date: Date): string {
     (startOfDay(date).getTime() - startOfDay(now).getTime()) / 86_400_000
   );
   const hhmm = pad2(date.getHours()) + ":" + pad2(date.getMinutes());
-  if (diffDays === 0) return `vandaag ${hhmm}`;
-  if (diffDays === 1) return `morgen ${hhmm}`;
-  if (diffDays >= 2 && diffDays <= 6) return `${WEEKDAY_NL[date.getDay()]} ${hhmm}`;
-  return `${date.getDate()} ${MONTH_NL[date.getMonth()]} ${hhmm}`;
+  if (diffDays >= 0 && diffDays <= 6) {
+    return `${WEEKDAY_EN[date.getDay()]} ${hhmm}`;
+  }
+  return `${date.getDate()} ${MONTH_EN[date.getMonth()]} ${hhmm}`;
 }
 
 function stripPrefixes(subject: string, isCustom: boolean): string {
@@ -40,7 +57,7 @@ function applyVisibilityPrefix(
   const msg = draft.getMessage();
   const currentSubject = msg.getSubject();
   const cleanSubject = stripPrefixes(currentSubject, isCustom);
-  const newSubject = `[→ ${formatShortTime(plannedAt)}] ${cleanSubject}`;
+  const newSubject = `${VISIBILITY_ICON} ${formatShortTime(plannedAt)} ${VISIBILITY_SEP} ${cleanSubject}`;
   if (newSubject === currentSubject) return;
   updateDraftSubject(draft, newSubject);
 }

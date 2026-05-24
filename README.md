@@ -11,7 +11,7 @@ no OAuth app to register. Works while your Mac is off.
 1. Write a draft in Mimestream (or anywhere).
 2. Apply a `Send Later/…` label to it.
 3. A time-based trigger runs every 10 min on Google's servers:
-   - First sighting → schedules the draft, prefixes the subject with `[→ wkdag HH:MM]`
+   - First sighting → schedules the draft, prefixes the subject with `􀧞 Weekday HH:MM ——`
      so you can see when it'll go out.
    - On send time → strips the prefix and sends. State auto-cleaned.
 

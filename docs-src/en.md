@@ -128,9 +128,9 @@ On send, the token is automatically removed, so the recipient only sees "Meeting
 
 ## Subject line examples
 
-Once a labeled draft is detected, the subject gets a `[→ …]` prefix with the scheduled time. That's visible only to you — right before sending, the prefix is stripped again.
+Once a labeled draft is detected, the subject gets a calendar-icon prefix with the scheduled time. That's visible only to you — right before sending, the prefix is stripped again.
 
-<p class="mockup-caption">Note: the prefix uses Dutch day/month abbreviations by default (e.g. <code>ma</code> for Monday, <code>jun</code> for June). The format is configurable in <code>src/subject.ts</code>.</p>
+<p class="mockup-caption">On macOS the prefix renders with an SF Symbol calendar icon; on other platforms it falls back to a placeholder glyph.</p>
 
 ### Example 1 — Send Later/Tomorrow on a Saturday
 
@@ -168,7 +168,7 @@ Once a labeled draft is detected, the subject gets a `[→ …]` prefix with the
 </div>
 <div class="mockup-row">
 <span class="mockup-label">Subject:</span>
-<span class="mockup-value subject">[→ ma 09:00] Meeting proposal</span>
+<span class="mockup-value subject">􀧞 Monday 09:00 —— Meeting proposal</span>
 <span class="chip">Send Later/Tomorrow</span>
 </div>
 </div>
@@ -229,7 +229,7 @@ Once a labeled draft is detected, the subject gets a `[→ …]` prefix with the
 </div>
 <div class="mockup-row">
 <span class="mockup-label">Subject:</span>
-<span class="mockup-value subject">[→ 15 jun 14:30] Project follow-up</span>
+<span class="mockup-value subject">􀧞 15 Jun 14:30 —— Project follow-up</span>
 <span class="chip">Send Later/Custom</span>
 </div>
 </div>
@@ -282,7 +282,7 @@ Handy for a weekly review — if there's anything you no longer want to send, sl
 <details>
 <summary>Can I still change the scheduled time after labeling?</summary>
 <div class="faq-body">
-<p>The <code>[→ …]</code> prefix in the subject is display-only. Editing the time there has no effect on the planning.</p>
+<p>The <code>􀧞 …</code> prefix in the subject is display-only. Editing the time there has no effect on the planning.</p>
 <p>To actually change the time:</p>
 <ul>
 <li>Switch to a different <span class="chip">Send Later/…</span> label, or</li>
@@ -317,7 +317,7 @@ Handy for a weekly review — if there's anything you no longer want to send, sl
 </details>
 
 <details>
-<summary>Is the [→ …] prefix sent to the recipient?</summary>
+<summary>Is the calendar-icon prefix sent to the recipient?</summary>
 <div class="faq-body">
 <p>No. Right before the actual send, the script strips the prefix from the subject. The recipient sees your original subject without any trace of sendlater.</p>
 <p>Same goes for the <code>[send: …]</code> token with Custom: it's stripped before the mail goes out.</p>
