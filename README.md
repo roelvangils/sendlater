@@ -128,16 +128,6 @@ The `docs/` folder is the committed build output served by GitHub Pages at https
 - IDE → run `auditScheduled` any time — chronological list of pending sends.
 - Failure → `[sendlater] Send failed` mail in your inbox.
 
-## Migrating from v1
-
-If you had the original `Send Tomorrow` label:
-
-1. `clasp push` v2 code, run `ensureLabels`.
-2. For each existing labeled draft: remove the old `Send Tomorrow` label, apply
-   `Send Later/Tomorrow` instead.
-3. Old `Send Tomorrow` label can be deleted in Gmail settings.
-4. State for the old draft IDs is auto-cleaned on the next trigger run.
-
 ## Limits
 
 - Free Gmail: 100 sends/day via `GmailApp`. Workspace: 1500. Per-account.

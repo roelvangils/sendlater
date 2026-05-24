@@ -1,12 +1,6 @@
 const VISIBILITY_ICON = "⏳";
 const VISIBILITY_SEP = "——";
-
-// Matches our prefix structurally: 1 leading "icon" token, 1–3 more tokens
-// (day or date), a HH:MM time, and the em-dash separator. Catches the current
-// emoji form, the broken SF-Symbol form that came through as mojibake, and
-// any future icon swap. Also handles the legacy `[→ ...]` form for drafts
-// scheduled under v2.0.
-const VISIBILITY_PREFIX_REGEX = /^(?:\S+(?: \S+){1,3} \d{1,2}:\d{2} —— |\[→[^\]]*\]\s*)/u;
+const VISIBILITY_PREFIX_REGEX = /^⏳ [^—]*?—— /u;
 
 const WEEKDAY_EN = [
   "Sunday",
