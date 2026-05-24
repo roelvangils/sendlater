@@ -1,6 +1,6 @@
-const DEFAULT_SEND_HOUR = 9;
-const TONIGHT_HOUR = 20;
-const TEST_OFFSET_MINUTES = 2;
+// User-tunable constants (DEFAULT_SEND_HOUR, TONIGHT_HOUR, TEST_OFFSET_MINUTES,
+// TRIGGER_INTERVAL_MIN) live in src/userconfig.ts. The Apps Script global
+// scope makes them visible here without an import.
 
 const HOLD_LABEL = "Send Later/Hold";
 const CUSTOM_LABEL = "Send Later/Custom";

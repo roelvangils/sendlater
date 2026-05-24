@@ -77,6 +77,38 @@ the next run picks it up.
 
 The token is stripped from the subject before the mail goes out.
 
+## Prerequisites
+
+- **Node.js 18+** and npm — for `clasp` and the docs build.
+- **A Google account** — free Gmail works; Google Workspace gets you higher
+  daily quotas (1500 vs 100 mails/day).
+- **Apps Script API enabled** — one-time toggle at
+  <https://script.google.com/home/usersettings> if you've never created an
+  Apps Script project before.
+- Any platform with a shell — `clasp` works on macOS, Linux, Windows.
+
+## Configure
+
+Two files hold every user-tunable knob. Edit them before your first push.
+
+**`src/userconfig.ts`** — scheduling defaults:
+
+| Constant | Default | What it controls |
+|---|---|---|
+| `DEFAULT_SEND_HOUR` | `9` | When `Tomorrow` / `Monday` labels send |
+| `TONIGHT_HOUR` | `20` | When `Tonight` sends (and the cutoff for "already past") |
+| `TEST_OFFSET_MINUTES` | `2` | How far in the future the `Test` label schedules |
+| `TRIGGER_INTERVAL_MIN` | `5` | How often the scheduler checks (allowed: 1, 5, 10, 15, 30) |
+
+**`appsscript.json`** — your timezone:
+
+```json
+"timeZone": "Europe/Brussels"
+```
+
+Use any [IANA timezone name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+(`Europe/Amsterdam`, `America/New_York`, `Asia/Tokyo`, …).
+
 ## Setup
 
 ```bash
@@ -90,12 +122,19 @@ npm run open
 In the Apps Script web IDE:
 
 1. Run `ensureLabels` once → creates the label tree, prompts for Gmail consent.
-2. Run `installTrigger` once → registers the 5-min time trigger.
+2. Run `installTrigger` once → registers the time trigger.
 
 That's it. From now on, label a draft and forget about it.
 
+> **First-time OAuth consent**: Google will show an "unverified app" warning
+> because the script isn't published. Click **Advanced → Go to "Send Later"
+> (unsafe)** to grant the `gmail.modify` scope. For Google Workspace
+> accounts, an admin can pre-approve the script in the Admin Console if
+> personal consent is blocked.
+
 ## Files
 
+- `src/userconfig.ts` — the four user-tunable constants (edit first).
 - `src/config.ts` — label-to-time mapping, time helpers.
 - `src/scheduler.ts` — main loop (`processScheduledDrafts`), driven by the trigger.
 - `src/parser.ts` — custom datetime parser (ISO, relative, weekday).
@@ -104,6 +143,58 @@ That's it. From now on, label a draft and forget about it.
 - `src/state.ts` — `PropertiesService` wrapper + subject hash.
 - `src/setup.ts` — one-time helpers (`installTrigger`, `ensureLabels`).
 - `src/audit.ts` — `auditScheduled()` lists all scheduled drafts with their times.
+
+## Troubleshooting
+
+- **`clasp login` opened the wrong Google account.** Run `npx clasp logout`,
+  log out of all Google accounts in your browser, then `npx clasp login` again.
+- **`clasp create` fails with an API error.** Enable the Apps Script API at
+  <https://script.google.com/home/usersettings>.
+- **OAuth consent shows "unverified app".** Expected — click through via
+  **Advanced**. The script is yours, running under your own account.
+- **Labels don't appear in Mimestream after `ensureLabels`.** Force-refresh
+  Mimestream (⌘R) — labels sync from Gmail on next pull.
+- **Mail not sending despite the label.** Open the IDE → Executions tab.
+  Most common: draft has multiple `Send Later/*` labels (use just one), or
+  the trigger isn't installed (run `installTrigger` once).
+- **`[sendlater] Send failed: Quota exceeded`.** Free Gmail caps at 100
+  sends/day, Workspace at 1500. Quota resets at midnight Pacific time. The
+  draft stays in your queue and retries automatically.
+- **You see "Another run is in progress; skipping this tick." in the log.**
+  That's normal — `LockService` is preventing overlap. The next tick will
+  pick up where this one left off.
+
+## Uninstall
+
+If you want to take it all back out:
+
+1. IDE → Triggers (clock icon, left sidebar) → delete the
+   `processScheduledDrafts` trigger.
+2. Gmail Settings → Labels → delete `Send Later/Tonight`, `…/Tomorrow`,
+   `…/Monday`, `…/Custom`, `…/Hold`, `…/Test`, and the parent `Send Later`.
+3. Delete the Apps Script project at <https://script.google.com>.
+4. Locally: `rm -rf node_modules .clasp.json` to remove tracking files.
+
+Any drafts you'd labeled stay where they are — just unscheduled.
+
+## Privacy
+
+The script runs entirely under your Google account. No third-party servers
+are involved.
+
+- **Data location**: all draft content, state, and labels live in your
+  Gmail and Apps Script tenant. Nothing is sent to the author, GitHub, or
+  any external service.
+- **What the script reads**: draft subjects, bodies, recipients, and
+  attachments — to send them on schedule. Same things any mail client
+  reads.
+- **State in `PropertiesService`** contains only draft IDs, planned
+  timestamps, label names, and short MD5 hashes of subjects (for parse-
+  failure throttling). No message content, no recipient addresses.
+- **Notifications** (`[sendlater] …`) go to your own Gmail inbox via
+  `MailApp`. They never leave your account.
+- **OAuth scope**: `gmail.modify` (read, send, label) plus
+  `script.scriptapp` (manage your own triggers). No other scopes requested.
 
 ## Documentation site
 

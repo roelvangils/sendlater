@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "description": "Schedule Gmail sends via labels on drafts (workaround for Mimestream).",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "push": "clasp push",
     "open": "clasp open",

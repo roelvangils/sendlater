@@ -359,6 +359,49 @@ Handy for a weekly review — if there's anything you no longer want to send, sl
 </div>
 </details>
 
+<details>
+<summary>What if something goes wrong — clasp errors, missing labels, mails not sending?</summary>
+<div class="faq-body">
+<p>Quick checks, top to bottom:</p>
+<ul>
+<li><strong>clasp logged into the wrong Google account</strong> → <code>npx clasp logout</code>, log out of Google in your browser, then <code>npx clasp login</code> again.</li>
+<li><strong><code>clasp create</code> fails with an API error</strong> → enable the Apps Script API at <a href="https://script.google.com/home/usersettings">script.google.com/home/usersettings</a>.</li>
+<li><strong>OAuth shows "unverified app"</strong> → expected, click through via <strong>Advanced</strong>.</li>
+<li><strong>Labels don't appear in Mimestream</strong> → force-refresh (⌘R). Labels sync from Gmail on next pull.</li>
+<li><strong>Mail not sending despite the label</strong> → open the IDE → Executions tab. Most common cause: the draft has multiple <span class="chip">Send Later/…</span> labels (use just one) or the trigger isn't installed (run <code>installTrigger</code> once).</li>
+<li><strong>Quota exceeded</strong> → free Gmail caps at 100 sends/day, Workspace at 1500. Resets at midnight Pacific time. The draft stays queued and retries automatically.</li>
+<li><strong>"Another run is in progress; skipping this tick."</strong> → normal — <code>LockService</code> is preventing overlap. The next tick picks it up.</li>
+</ul>
+</div>
+</details>
+
+<details>
+<summary>How do I remove sendlater entirely?</summary>
+<div class="faq-body">
+<ol>
+<li>IDE → Triggers (clock icon, left sidebar) → delete the <code>processScheduledDrafts</code> trigger.</li>
+<li>Gmail Settings → Labels → delete the <span class="chip">Send Later/…</span> labels and the <span class="chip">Send Later</span> parent.</li>
+<li>Delete the Apps Script project at <a href="https://script.google.com">script.google.com</a>.</li>
+<li>Locally: <code>rm -rf node_modules .clasp.json</code> if you want to clean up the working tree.</li>
+</ol>
+<p>Any drafts you'd labeled stay where they are — just unscheduled.</p>
+</div>
+</details>
+
+<details>
+<summary>What data can the script see, and where does it live?</summary>
+<div class="faq-body">
+<p>Everything runs inside your own Google account. No third-party servers, no telemetry.</p>
+<ul>
+<li><strong>Data location</strong>: drafts, state, and labels live in your Gmail and Apps Script tenant. Nothing is sent to the author, GitHub, or any external service.</li>
+<li><strong>What the script reads</strong>: draft subjects, bodies, recipients, and attachments — the same things any mail client reads — to send them on schedule.</li>
+<li><strong>State in <code>PropertiesService</code></strong> contains only draft IDs, planned timestamps, label names, and short MD5 hashes of subjects. No message content, no recipient addresses.</li>
+<li><strong>Notifications</strong> (<code>[sendlater] …</code>) go to your own Gmail inbox via <code>MailApp</code>. They never leave your account.</li>
+<li><strong>OAuth scope</strong>: <code>gmail.modify</code> (read, send, label) plus <code>script.scriptapp</code> (manage your own triggers). No other scopes requested.</li>
+</ul>
+</div>
+</details>
+
 </section>
 
 <footer>

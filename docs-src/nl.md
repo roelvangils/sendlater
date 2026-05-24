@@ -359,6 +359,49 @@ Handig voor een wekelijkse review — staat er iets dat je toch niet meer wil ve
 </div>
 </details>
 
+<details>
+<summary>Wat als er iets misloopt — clasp-fouten, ontbrekende labels, mails die niet vertrekken?</summary>
+<div class="faq-body">
+<p>Snelle checks, van boven naar onder:</p>
+<ul>
+<li><strong>clasp ingelogd op verkeerd Google-account</strong> → <code>npx clasp logout</code>, log uit van Google in je browser, <code>npx clasp login</code> opnieuw.</li>
+<li><strong><code>clasp create</code> faalt met API-fout</strong> → activeer de Apps Script API op <a href="https://script.google.com/home/usersettings">script.google.com/home/usersettings</a>.</li>
+<li><strong>OAuth toont "unverified app"</strong> → verwacht, klik door via <strong>Advanced</strong>.</li>
+<li><strong>Labels verschijnen niet in Mimestream</strong> → forceer-refresh (⌘R). Labels syncen vanuit Gmail bij de volgende pull.</li>
+<li><strong>Mail vertrekt niet ondanks het label</strong> → open IDE → Executions-tab. Meest voorkomende oorzaak: meerdere <span class="chip">Send Later/…</span>-labels op één draft (gebruik er maar één) of de trigger is niet geïnstalleerd (run <code>installTrigger</code> eenmalig).</li>
+<li><strong>Quota overschreden</strong> → gratis Gmail tot 100 sends/dag, Workspace tot 1500. Reset om middernacht Pacific time. Draft blijft in de wachtrij en probeert automatisch opnieuw.</li>
+<li><strong>"Another run is in progress; skipping this tick."</strong> → normaal — <code>LockService</code> voorkomt overlap. Volgende tick pakt het op.</li>
+</ul>
+</div>
+</details>
+
+<details>
+<summary>Hoe verwijder ik sendlater volledig?</summary>
+<div class="faq-body">
+<ol>
+<li>IDE → Triggers (klokje-icoon, linker sidebar) → verwijder de <code>processScheduledDrafts</code>-trigger.</li>
+<li>Gmail-instellingen → Labels → verwijder de <span class="chip">Send Later/…</span>-labels en het <span class="chip">Send Later</span>-parent-label.</li>
+<li>Verwijder het Apps Script-project op <a href="https://script.google.com">script.google.com</a>.</li>
+<li>Lokaal: <code>rm -rf node_modules .clasp.json</code> om de working tree op te ruimen.</li>
+</ol>
+<p>Eventuele gelabelde drafts blijven gewoon staan — alleen niet meer ingepland.</p>
+</div>
+</details>
+
+<details>
+<summary>Welke data kan het script zien, en waar leeft die?</summary>
+<div class="faq-body">
+<p>Alles draait binnen je eigen Google-account. Geen derde-partij-servers, geen telemetrie.</p>
+<ul>
+<li><strong>Data-locatie</strong>: drafts, state en labels leven in jouw Gmail en Apps Script-tenant. Niks wordt naar de auteur, GitHub of externe diensten gestuurd.</li>
+<li><strong>Wat het script leest</strong>: subject, body, ontvangers en bijlagen van drafts — dezelfde dingen die elke e-mail-client leest — om ze op het juiste moment te versturen.</li>
+<li><strong>State in <code>PropertiesService</code></strong> bevat enkel draft-ID's, geplande timestamps, label-namen en korte MD5-hashes van subjects. Geen content, geen ontvanger-adressen.</li>
+<li><strong>Notificaties</strong> (<code>[sendlater] …</code>) komen toe in je eigen Gmail-inbox via <code>MailApp</code>. Ze verlaten je account niet.</li>
+<li><strong>OAuth-scope</strong>: <code>gmail.modify</code> (lezen, sturen, labelen) plus <code>script.scriptapp</code> (eigen triggers beheren). Geen andere scopes gevraagd.</li>
+</ul>
+</div>
+</details>
+
 </section>
 
 <footer>

@@ -1,5 +1,5 @@
 const TRIGGER_HANDLER = "processScheduledDrafts";
-const TRIGGER_INTERVAL_MIN = 5;
+// TRIGGER_INTERVAL_MIN comes from src/userconfig.ts (Apps Script global scope).
 
 function installTrigger(): void {
   const existing = ScriptApp.getProjectTriggers().filter(

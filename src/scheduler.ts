@@ -1,25 +1,39 @@
 function processScheduledDrafts(): void {
-  const now = Date.now();
-  const drafts = GmailApp.getDrafts();
-  const seenIds = new Set<string>();
-
-  for (const draft of drafts) {
-    const id = draft.getId();
-    const labelNames = collectLabelNames(draft);
-
-    if (labelNames.indexOf(HOLD_LABEL) !== -1) {
-      seenIds.add(id);
-      continue;
-    }
-
-    const labelName = findMatchingLabel(labelNames);
-    if (!labelName) continue;
-    seenIds.add(id);
-
-    handleDraft(draft, id, labelName, getScheduled(id), now);
+  // Bail if another run is in progress. Overlap can happen if a previous run
+  // is still finishing when the next trigger fires, or if a manual Run from
+  // the IDE overlaps with the scheduled trigger. Without this guard, two
+  // concurrent runs could both reach draft.send() for the same draft.
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(0)) {
+    console.log("Another run is in progress; skipping this tick.");
+    return;
   }
 
-  cleanupOrphans(seenIds);
+  try {
+    const now = Date.now();
+    const drafts = GmailApp.getDrafts();
+    const seenIds = new Set<string>();
+
+    for (const draft of drafts) {
+      const id = draft.getId();
+      const labelNames = collectLabelNames(draft);
+
+      if (labelNames.indexOf(HOLD_LABEL) !== -1) {
+        seenIds.add(id);
+        continue;
+      }
+
+      const labelName = findMatchingLabel(labelNames);
+      if (!labelName) continue;
+      seenIds.add(id);
+
+      handleDraft(draft, id, labelName, getScheduled(id), now);
+    }
+
+    cleanupOrphans(seenIds);
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 function collectLabelNames(draft: GoogleAppsScript.Gmail.GmailDraft): string[] {
