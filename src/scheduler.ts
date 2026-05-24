@@ -55,7 +55,13 @@ function handleDraft(
 
   if (now >= state.plannedAt) {
     sendDraft(draft, id, isCustom);
+    return;
   }
+
+  // Keep the visibility prefix in sync with the current planned time and
+  // the current icon/format. Idempotent: applyVisibilityPrefix skips the
+  // draft.update() call if the subject is already correct.
+  applyVisibilityPrefix(draft, new Date(state.plannedAt), isCustom);
 }
 
 function planAndApply(

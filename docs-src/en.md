@@ -128,9 +128,7 @@ On send, the token is automatically removed, so the recipient only sees "Meeting
 
 ## Subject line examples
 
-Once a labeled draft is detected, the subject gets a calendar-icon prefix with the scheduled time. That's visible only to you — right before sending, the prefix is stripped again.
-
-<p class="mockup-caption">On macOS the prefix renders with an SF Symbol calendar icon; on other platforms it falls back to a placeholder glyph.</p>
+Once a labeled draft is detected, the subject gets an hourglass-icon prefix with the scheduled time. That's visible only to you — right before sending, the prefix is stripped again.
 
 ### Example 1 — Send Later/Tomorrow on a Saturday
 
@@ -168,7 +166,7 @@ Once a labeled draft is detected, the subject gets a calendar-icon prefix with t
 </div>
 <div class="mockup-row">
 <span class="mockup-label">Subject:</span>
-<span class="mockup-value subject">􀧞 Monday 09:00 —— Meeting proposal</span>
+<span class="mockup-value subject">⏳ Monday 09:00 —— Meeting proposal</span>
 <span class="chip">Send Later/Tomorrow</span>
 </div>
 </div>
@@ -229,7 +227,7 @@ Once a labeled draft is detected, the subject gets a calendar-icon prefix with t
 </div>
 <div class="mockup-row">
 <span class="mockup-label">Subject:</span>
-<span class="mockup-value subject">􀧞 15 Jun 14:30 —— Project follow-up</span>
+<span class="mockup-value subject">⏳ 15 Jun 14:30 —— Project follow-up</span>
 <span class="chip">Send Later/Custom</span>
 </div>
 </div>
@@ -282,7 +280,7 @@ Handy for a weekly review — if there's anything you no longer want to send, sl
 <details>
 <summary>Can I still change the scheduled time after labeling?</summary>
 <div class="faq-body">
-<p>The <code>􀧞 …</code> prefix in the subject is display-only. Editing the time there has no effect on the planning.</p>
+<p>The <code>⏳ …</code> prefix in the subject is display-only. Editing the time there has no effect on the planning.</p>
 <p>To actually change the time:</p>
 <ul>
 <li>Switch to a different <span class="chip">Send Later/…</span> label, or</li>

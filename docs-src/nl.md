@@ -128,9 +128,7 @@ Bij het verzenden wordt het token automatisch verwijderd, dus de ontvanger ziet 
 
 ## Voorbeelden van onderwerpregels
 
-Zodra een gelabeld concept gedetecteerd wordt, krijgt het onderwerp een prefix met een agenda-icoontje en de geplande tijd. Dat is alleen voor jou zichtbaar — vlak voor het verzenden wordt de prefix weer gestript.
-
-<p class="mockup-caption">Op macOS verschijnt de prefix met een SF Symbol agenda-icoon; op andere platformen valt het terug op een placeholder-glyph. De tijdsaanduiding is altijd in het Engels.</p>
+Zodra een gelabeld concept gedetecteerd wordt, krijgt het onderwerp een prefix met een zandloper-icoontje en de geplande tijd. Dat is alleen voor jou zichtbaar — vlak voor het verzenden wordt de prefix weer gestript. De tijdsaanduiding is altijd in het Engels.
 
 ### Voorbeeld 1 — Send Later/Tomorrow op een zaterdag
 
@@ -168,7 +166,7 @@ Zodra een gelabeld concept gedetecteerd wordt, krijgt het onderwerp een prefix m
 </div>
 <div class="mockup-row">
 <span class="mockup-label">Subject:</span>
-<span class="mockup-value subject">􀧞 Monday 09:00 —— Vergaderingsvoorstel</span>
+<span class="mockup-value subject">⏳ Monday 09:00 —— Vergaderingsvoorstel</span>
 <span class="chip">Send Later/Tomorrow</span>
 </div>
 </div>
@@ -229,7 +227,7 @@ Zodra een gelabeld concept gedetecteerd wordt, krijgt het onderwerp een prefix m
 </div>
 <div class="mockup-row">
 <span class="mockup-label">Subject:</span>
-<span class="mockup-value subject">􀧞 15 Jun 14:30 —— Follow-up project</span>
+<span class="mockup-value subject">⏳ 15 Jun 14:30 —— Follow-up project</span>
 <span class="chip">Send Later/Custom</span>
 </div>
 </div>
@@ -282,7 +280,7 @@ Handig voor een wekelijkse review — staat er iets dat je toch niet meer wil ve
 <details>
 <summary>Kan ik de geplande tijd nog wijzigen nadat ik gelabeld heb?</summary>
 <div class="faq-body">
-<p>De <code>􀧞 …</code>-prefix in het onderwerp is alleen weergave. Daar het tijdstip in editen heeft geen effect op de planning.</p>
+<p>De <code>⏳ …</code>-prefix in het onderwerp is alleen weergave. Daar het tijdstip in editen heeft geen effect op de planning.</p>
 <p>Om de tijd echt te wijzigen:</p>
 <ul>
 <li>Wissel naar een ander <span class="chip">Send Later/…</span>-label, of</li>

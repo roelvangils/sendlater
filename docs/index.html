@@ -508,8 +508,7 @@ npx clasp push</code></pre>
 <strong>Unparseable token?</strong> You'll get a <code>[sendlater] Could not parse</code> email in your inbox. The draft stays put and isn't sent. Adjust the subject and the next trigger run will pick it up.
 </div>
 <h2>Subject line examples</h2>
-<p>Once a labeled draft is detected, the subject gets a calendar-icon prefix with the scheduled time. That's visible only to you — right before sending, the prefix is stripped again.</p>
-<p class="mockup-caption">On macOS the prefix renders with an SF Symbol calendar icon; on other platforms it falls back to a placeholder glyph.</p>
+<p>Once a labeled draft is detected, the subject gets an hourglass-icon prefix with the scheduled time. That's visible only to you — right before sending, the prefix is stripped again.</p>
 <h3>Example 1 — Send Later/Tomorrow on a Saturday</h3>
 <p class="mockup-caption"><strong>a)</strong> Draft with label, before the next trigger run:</p>
 <div class="mockup">
@@ -544,7 +543,7 @@ npx clasp push</code></pre>
 </div>
 <div class="mockup-row">
 <span class="mockup-label">Subject:</span>
-<span class="mockup-value subject">􀧞 Monday 09:00 —— Meeting proposal</span>
+<span class="mockup-value subject">⏳ Monday 09:00 —— Meeting proposal</span>
 <span class="chip">Send Later/Tomorrow</span>
 </div>
 </div>
@@ -601,7 +600,7 @@ npx clasp push</code></pre>
 </div>
 <div class="mockup-row">
 <span class="mockup-label">Subject:</span>
-<span class="mockup-value subject">􀧞 15 Jun 14:30 —— Project follow-up</span>
+<span class="mockup-value subject">⏳ 15 Jun 14:30 —— Project follow-up</span>
 <span class="chip">Send Later/Custom</span>
 </div>
 </div>
@@ -644,7 +643,7 @@ Total: 3 entries.
 <details>
 <summary>Can I still change the scheduled time after labeling?</summary>
 <div class="faq-body">
-<p>The <code>􀧞 …</code> prefix in the subject is display-only. Editing the time there has no effect on the planning.</p>
+<p>The <code>⏳ …</code> prefix in the subject is display-only. Editing the time there has no effect on the planning.</p>
 <p>To actually change the time:</p>
 <ul>
 <li>Switch to a different <span class="chip">Send Later/…</span> label, or</li>
