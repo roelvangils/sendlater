@@ -9,7 +9,7 @@
 <ol class="steps">
 <li><strong>Write a draft in Mimestream.</strong> Just like any regular email — recipient, subject, body.</li>
 <li><strong>Apply a label from the <span class="chip">Send Later/…</span> set.</strong> For example <span class="chip">Send Later/Tomorrow</span>. Done.</li>
-<li><strong>Forget about it.</strong> Google's servers check every 10 minutes which labeled drafts need to go out and send them at the right time. Your laptop doesn't need to be on.</li>
+<li><strong>Forget about it.</strong> Google's servers check every 5 minutes which labeled drafts need to go out and send them at the right time. Your laptop doesn't need to be on.</li>
 </ol>
 
 ## Supported email clients
@@ -52,7 +52,7 @@ npx clasp push</code></pre>
 <p>From the function dropdown at the top:</p>
 <ul>
 <li>Once: <code>ensureLabels</code> — creates the label tree. Gmail will ask for permission for the <code>gmail.modify</code> scope.</li>
-<li>Once: <code>installTrigger</code> — registers the 10-minute time trigger on Google's servers.</li>
+<li>Once: <code>installTrigger</code> — registers the 5-minute time trigger on Google's servers.</li>
 </ul>
 </li>
 </ol>
@@ -274,7 +274,7 @@ Handy for a weekly review — if there's anything you no longer want to send, sl
 <details>
 <summary>What if I accidentally remove the label?</summary>
 <div class="faq-body">
-<p>The scheduled send is cancelled. On the next trigger run (within 10 minutes) the stored planning is cleaned up automatically. The draft stays as a draft in Mimestream — nothing happens to it.</p>
+<p>The scheduled send is cancelled. On the next trigger run (within 5 minutes) the stored planning is cleaned up automatically. The draft stays as a draft in Mimestream — nothing happens to it.</p>
 <p>You can simply re-apply the label to schedule again. Note: the time gets recalculated at the moment of re-labeling.</p>
 </div>
 </details>
@@ -286,7 +286,7 @@ Handy for a weekly review — if there's anything you no longer want to send, sl
 <p>To actually change the time:</p>
 <ul>
 <li>Switch to a different <span class="chip">Send Later/…</span> label, or</li>
-<li>Remove the label, wait for a trigger run to clean up state (max. 10 min), then re-apply, or</li>
+<li>Remove the label, wait for a trigger run to clean up state (max. 5 min), then re-apply, or</li>
 <li>Use <span class="chip">Send Later/Custom</span> with a new <code>[send: …]</code> token for precise control.</li>
 </ul>
 </div>
@@ -365,5 +365,5 @@ Handy for a weekly review — if there's anything you no longer want to send, sl
 
 <footer>
 <p>Source: <a href="https://github.com/roelvangils/sendlater">github.com/roelvangils/sendlater</a></p>
-<p>Quotas: 100 mails/day on free Gmail, 1500 on Workspace. Trigger granularity: 10 minutes — actual send time is planned time ± 10 min.</p>
+<p>Quotas: 100 mails/day on free Gmail, 1500 on Workspace. Trigger granularity: 5 minutes — actual send time is planned time ± 5 min.</p>
 </footer>

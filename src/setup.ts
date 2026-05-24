@@ -1,5 +1,5 @@
 const TRIGGER_HANDLER = "processScheduledDrafts";
-const TRIGGER_INTERVAL_MIN = 10;
+const TRIGGER_INTERVAL_MIN = 5;
 
 function installTrigger(): void {
   const existing = ScriptApp.getProjectTriggers().filter(

@@ -9,7 +9,7 @@
 <ol class="steps">
 <li><strong>Schrijf een concept in Mimestream.</strong> Net zoals een gewone mail — ontvanger, onderwerp, inhoud.</li>
 <li><strong>Plak een label uit de <span class="chip">Send Later/…</span>-reeks.</strong> Bijvoorbeeld <span class="chip">Send Later/Tomorrow</span>. Klaar.</li>
-<li><strong>Niks meer te doen.</strong> Google's servers checken elke 10 minuten of er gelabelde concepten klaarstaan, en versturen ze op het juiste tijdstip. Je laptop hoeft niet aan te staan.</li>
+<li><strong>Niks meer te doen.</strong> Google's servers checken elke 5 minuten of er gelabelde concepten klaarstaan, en versturen ze op het juiste tijdstip. Je laptop hoeft niet aan te staan.</li>
 </ol>
 
 ## Ondersteunde e-mail clients
@@ -52,7 +52,7 @@ npx clasp push</code></pre>
 <p>In de functie-dropdown bovenaan:</p>
 <ul>
 <li>Eén keer <code>ensureLabels</code> — maakt de label-boom aan. Gmail vraagt toestemming voor de <code>gmail.modify</code>-scope.</li>
-<li>Eén keer <code>installTrigger</code> — registreert de 10-min time-trigger op Google's servers.</li>
+<li>Eén keer <code>installTrigger</code> — registreert de 5-min time-trigger op Google's servers.</li>
 </ul>
 </li>
 </ol>
@@ -274,7 +274,7 @@ Handig voor een wekelijkse review — staat er iets dat je toch niet meer wil ve
 <details>
 <summary>Wat als ik het label per ongeluk verwijder?</summary>
 <div class="faq-body">
-<p>De geplande verzending wordt geannuleerd. Bij de volgende trigger-run (binnen 10 minuten) wordt de bewaarde planning automatisch opgeruimd. Het concept blijft als concept in Mimestream staan — er gebeurt niks ermee.</p>
+<p>De geplande verzending wordt geannuleerd. Bij de volgende trigger-run (binnen 5 minuten) wordt de bewaarde planning automatisch opgeruimd. Het concept blijft als concept in Mimestream staan — er gebeurt niks ermee.</p>
 <p>Je kunt het label gewoon opnieuw plakken om alsnog in te plannen, met dien verstande dat de tijd opnieuw berekend wordt op het moment van re-labelen.</p>
 </div>
 </details>
@@ -286,7 +286,7 @@ Handig voor een wekelijkse review — staat er iets dat je toch niet meer wil ve
 <p>Om de tijd echt te wijzigen:</p>
 <ul>
 <li>Wissel naar een ander <span class="chip">Send Later/…</span>-label, of</li>
-<li>Haal het label weg, wacht op een trigger-run zodat de oude staat opgeruimd wordt (max. 10 min), en plak het label opnieuw, of</li>
+<li>Haal het label weg, wacht op een trigger-run zodat de oude staat opgeruimd wordt (max. 5 min), en plak het label opnieuw, of</li>
 <li>Gebruik <span class="chip">Send Later/Custom</span> met een nieuw <code>[send: …]</code>-token voor exacte controle.</li>
 </ul>
 </div>
@@ -365,5 +365,5 @@ Handig voor een wekelijkse review — staat er iets dat je toch niet meer wil ve
 
 <footer>
 <p>Broncode: <a href="https://github.com/roelvangils/sendlater">github.com/roelvangils/sendlater</a></p>
-<p>Quota: 100 mails/dag op gratis Gmail, 1500 op Workspace. Trigger-granulariteit: 10 minuten — feitelijke verzendtijd is geplande tijd ± 10 min.</p>
+<p>Quota: 100 mails/dag op gratis Gmail, 1500 op Workspace. Trigger-granulariteit: 5 minuten — feitelijke verzendtijd is geplande tijd ± 5 min.</p>
 </footer>
