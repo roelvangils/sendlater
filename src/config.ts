@@ -43,6 +43,20 @@ function tonightOrTomorrowEvening(): Date {
     : atHourTomorrow(TONIGHT_HOUR);
 }
 
+function nextMorning(): Date {
+  const now = new Date();
+  const d = new Date(now);
+  if (now.getHours() >= MORNING_HOUR) {
+    d.setDate(d.getDate() + 1);
+  }
+  while (d.getDay() === 0 || d.getDay() === 6) {
+    d.setDate(d.getDate() + 1);
+  }
+  const randomMin = Math.floor(Math.random() * (MORNING_RANDOM_MINUTES + 1));
+  d.setHours(MORNING_HOUR, randomMin, 0, 0);
+  return d;
+}
+
 function addMinutes(minutes: number): Date {
   return new Date(Date.now() + minutes * 60_000);
 }
@@ -51,6 +65,7 @@ type LabelRule = (draft: GoogleAppsScript.Gmail.GmailDraft) => Date | null;
 
 const LABEL_RULES: Record<string, LabelRule> = {
   "Send Later/Tonight": () => tonightOrTomorrowEvening(),
+  "Send Later/Morning": () => nextMorning(),
   "Send Later/Tomorrow": () => nextNonWeekend(DEFAULT_SEND_HOUR),
   "Send Later/Monday": () => nextWeekday(1, DEFAULT_SEND_HOUR),
   "Send Later/Custom": (draft) => parseCustomToken(draft.getMessage().getSubject()),

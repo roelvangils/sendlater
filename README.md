@@ -45,7 +45,8 @@ client.
 
 ```
 Send Later/
-  Tonight     vandaag 20:00 (or tomorrow 20:00 if already past)
+  Tonight     today 20:00 (or tomorrow 20:00 if already past)
+  Morning     today/next workday 08:00–08:45 (random) — same day if labeled before 08:00
   Tomorrow    next non-weekend day 09:00
   Monday      next Monday 09:00
   Custom      time read from [send: …] token in subject

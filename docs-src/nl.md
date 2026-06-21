@@ -70,6 +70,12 @@ Plak één label per concept. Combineer eventueel met <span class="chip">Send La
 </div>
 
 <div class="label-card">
+<div class="label-card-header"><span class="chip">Send Later/Morning</span></div>
+<p><strong>Wat:</strong> een willekeurig minuut tussen 08:00 en 08:45, vandaag of op de eerstvolgende werkdag.</p>
+<p><strong>Wanneer:</strong> voor het "ik werk veel te laat"-geval. Plak het label op een draft om 00:30 op maandag → vertrekt diezelfde maandagochtend (niet dinsdag, zoals <span class="chip">Send Later/Tomorrow</span> zou doen). Plak het om 14:00 → vertrekt de volgende werkdag in de ochtend. Weekend wordt overgeslagen. Het willekeurige minuut maakt dat het minder als een geautomatiseerde verzending aanvoelt dan een exacte 08:00.</p>
+</div>
+
+<div class="label-card">
 <div class="label-card-header"><span class="chip">Send Later/Tomorrow</span></div>
 <p><strong>Wat:</strong> morgenochtend om 09:00.</p>
 <p><strong>Wanneer:</strong> verreweg het meest gebruikt. Voor mails die je 's avonds schrijft maar die je collega tijdens kantooruren wil zien. Weekend wordt automatisch overgeslagen — een vrijdag-laat label = maandag 09:00, geen aparte instelling nodig.</p>
