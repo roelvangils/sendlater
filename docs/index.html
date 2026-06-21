@@ -712,8 +712,10 @@ Total: 3 entries.
 <details>
 <summary>What if I apply two Send Later/* labels at once?</summary>
 <div class="faq-body">
-<p>The script picks whichever Gmail returns first — there's no guarantee which one. Better to apply just one at a time.</p>
-<p>Exception: <span class="chip">Send Later/Hold</span> can sit next to a time label. Hold doesn't act as a time label but as a switch (see above).</p>
+<p>Officially: undefined. Practically: usually the label you applied most recently wins, but you can't rely on it.</p>
+<p>The script picks the <em>first</em> matching label from <code>thread.getLabels()</code>. The Gmail API doesn't document the order, and it can shift between trigger runs.</p>
+<p>Concrete example: a draft with both <span class="chip">Send Later/Morning</span> <em>and</em> <span class="chip">Send Later/Tomorrow</span> might send today at 08:23 (Morning won) or tomorrow at 09:00 (Tomorrow won) — roulette. Always apply just one time label.</p>
+<p>Exception: <span class="chip">Send Later/Hold</span> can sit next to a time label. Hold is treated as a switch, not a time rule (see above) — when it's present, the script bails entirely.</p>
 </div>
 </details>
 <details>

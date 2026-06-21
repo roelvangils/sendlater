@@ -712,8 +712,10 @@ Total: 3 entries.
 <details>
 <summary>Wat als ik twee Send Later/*-labels tegelijk plak?</summary>
 <div class="faq-body">
-<p>Het script pakt willekeurig de eerste die Gmail teruggeeft — er is geen garantie welke. Plak er dus liever maar één tegelijk.</p>
-<p>Uitzondering: <span class="chip">Send Later/Hold</span> mag wél naast een tijdslabel staan. Hold gedraagt zich namelijk niet als een tijdslabel maar als een schakelaar (zie hierboven).</p>
+<p>Officieel: ongedefinieerd. Praktisch: meestal wint het label dat je het laatst plakte, maar daar kan je niet op rekenen.</p>
+<p>Het script pakt de <em>eerste</em> matchende label uit <code>thread.getLabels()</code>. De Gmail-API documenteert die volgorde niet en ze kan zelfs tussen trigger-runs verschuiven.</p>
+<p>Concreet voorbeeld: een draft met zowel <span class="chip">Send Later/Morning</span> <em>als</em> <span class="chip">Send Later/Tomorrow</span> kan vandaag om 08:23 vertrekken (Morning won) of morgen om 09:00 (Tomorrow won) — roulette. Plak dus altijd maar één tijdslabel.</p>
+<p>Uitzondering: <span class="chip">Send Later/Hold</span> mag wél naast een tijdslabel staan. Hold wordt behandeld als een schakelaar, niet als een tijdsregel (zie hierboven) — wanneer Hold aanwezig is, slaat het script de draft volledig over.</p>
 </div>
 </details>
 <details>
