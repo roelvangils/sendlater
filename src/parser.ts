@@ -15,6 +15,13 @@ function extractTokenContent(subject: string): string | null {
   return match ? match[1].trim() : null;
 }
 
+// The full "[send: …]" token as written, for storing in state and restoring
+// into the subject if the draft is unlabeled.
+function extractCustomToken(subject: string): string | null {
+  const match = subject.match(CUSTOM_TOKEN_REGEX);
+  return match ? match[0] : null;
+}
+
 function parseCustomToken(subject: string): Date | null {
   const content = extractTokenContent(subject);
   if (!content) return null;
@@ -30,14 +37,14 @@ function parseCustomToken(subject: string): Date | null {
 }
 
 function tryIsoDatetime(expr: string): Date | null {
-  const m = expr.match(/^(\d{4})-(\d{2})-(\d{2})[T\s](\d{1,2}):(\d{2})$/);
+  const m = expr.match(/^(\d{4})-(\d{1,2})-(\d{1,2})[T\s](\d{1,2}):(\d{2})$/);
   if (!m) return null;
   const d = new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], 0, 0);
   return isValidFutureDate(d) ? d : null;
 }
 
 function tryIsoDate(expr: string): Date | null {
-  const m = expr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  const m = expr.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
   if (!m) return null;
   const d = new Date(+m[1], +m[2] - 1, +m[3], DEFAULT_SEND_HOUR, 0, 0, 0);
   return isValidFutureDate(d) ? d : null;

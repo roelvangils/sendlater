@@ -278,7 +278,7 @@ Handy for a weekly review — if there's anything you no longer want to send, sl
 <details>
 <summary>What if I accidentally remove the label?</summary>
 <div class="faq-body">
-<p>The scheduled send is cancelled. On the next trigger run (within 5 minutes) the stored planning is cleaned up automatically. The draft stays as a draft in Mimestream — nothing happens to it.</p>
+<p>The scheduled send is cancelled. On the next trigger run (within 5 minutes) the stored planning is cleaned up automatically: the <code>⏳ …</code> prefix is removed from the subject, and for <span class="chip">Send Later/Custom</span> the <code>[send: …]</code> token is put back. The draft stays as a draft in Mimestream — nothing is sent.</p>
 <p>You can simply re-apply the label to schedule again. Note: the time gets recalculated at the moment of re-labeling.</p>
 </div>
 </details>
@@ -338,7 +338,7 @@ Handy for a weekly review — if there's anything you no longer want to send, sl
 <details>
 <summary>What if sending fails (e.g. quota exceeded)?</summary>
 <div class="faq-body">
-<p>You'll get a <code>[sendlater] Send failed</code> email in your inbox with the error. The draft stays put and the script retries on the next trigger run.</p>
+<p>You'll get a <code>[sendlater] Send failed</code> email in your inbox with the error — one mail per draft, not one per retry. The draft stays put and the script silently retries on every following trigger run (see the IDE's Executions tab for the attempts).</p>
 <p>The most common cause is the daily quota: 100 mails/day on free Gmail, 1500 on Workspace. The quota resets every 24 hours.</p>
 </div>
 </details>
@@ -346,9 +346,8 @@ Handy for a weekly review — if there's anything you no longer want to send, sl
 <details>
 <summary>What if I apply two Send Later/* labels at once?</summary>
 <div class="faq-body">
-<p>Officially: undefined. Practically: usually the label you applied most recently wins, but you can't rely on it.</p>
-<p>The script picks the <em>first</em> matching label from <code>thread.getLabels()</code>. The Gmail API doesn't document the order, and it can shift between trigger runs.</p>
-<p>Concrete example: a draft with both <span class="chip">Send Later/Morning</span> <em>and</em> <span class="chip">Send Later/Tomorrow</span> might send today at 08:23 (Morning won) or tomorrow at 09:00 (Tomorrow won) — roulette. Always apply just one time label.</p>
+<p>One label wins, in a fixed priority order: <span class="chip">Tonight</span> → <span class="chip">Morning</span> → <span class="chip">Tomorrow</span> → <span class="chip">Monday</span> → <span class="chip">Custom</span> → <span class="chip">Test</span>.</p>
+<p>Concrete example: a draft with both <span class="chip">Send Later/Morning</span> <em>and</em> <span class="chip">Send Later/Tomorrow</span> sends in the morning slot — Morning outranks Tomorrow. The others are simply ignored. Still, apply just one time label; the priority order is an implementation detail, not a feature.</p>
 <p>Exception: <span class="chip">Send Later/Hold</span> can sit next to a time label. Hold is treated as a switch, not a time rule (see above) — when it's present, the script bails entirely.</p>
 </div>
 </details>

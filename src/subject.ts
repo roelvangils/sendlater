@@ -55,7 +55,7 @@ function applyVisibilityPrefix(
   const cleanSubject = stripPrefixes(currentSubject, isCustom);
   const newSubject = `${VISIBILITY_ICON} ${formatShortTime(plannedAt)} ${VISIBILITY_SEP} ${cleanSubject}`;
   if (newSubject === currentSubject) return;
-  updateDraftSubject(draft, newSubject);
+  updateDraftSubjectRaw(draft.getId(), newSubject);
 }
 
 function clearPrefixesOnDraft(
@@ -66,50 +66,5 @@ function clearPrefixesOnDraft(
   const currentSubject = msg.getSubject();
   const cleanSubject = stripPrefixes(currentSubject, isCustom);
   if (cleanSubject === currentSubject) return;
-  updateDraftSubject(draft, cleanSubject);
-}
-
-function updateDraftSubject(
-  draft: GoogleAppsScript.Gmail.GmailDraft,
-  newSubject: string
-): void {
-  const msg = draft.getMessage();
-  const draftId = draft.getId();
-  const to = msg.getTo();
-  const plainBody = msg.getPlainBody();
-  const htmlBody = msg.getBody();
-  const safePlainBody = plainBody.trim() ? plainBody : " ";
-
-  if (!to || to.trim() === "") {
-    console.error("[update] empty 'to' field — refusing to update");
-    return;
-  }
-
-  let labelsToRestore: GoogleAppsScript.Gmail.GmailLabel[] = [];
-  try {
-    labelsToRestore = msg.getThread().getLabels();
-  } catch (e) {
-    console.warn(`[update] could not read labels before update: ${e}`);
-  }
-
-  // Apps Script quirk: draft.update() sometimes throws "Not found" even when
-  // the subject change has actually been committed server-side. Swallow the
-  // throw — the side effect we wanted has already happened.
-  try {
-    draft.update(to, newSubject, safePlainBody, { htmlBody });
-  } catch (e) {
-    console.warn(`[update] threw "${e}" — subject likely committed anyway`);
-  }
-
-  // Re-apply labels via a fresh lookup. The original draft ref can go stale
-  // after update, so re-fetch by ID.
-  try {
-    const freshDraft = GmailApp.getDraft(draftId);
-    const newThread = freshDraft.getMessage().getThread();
-    for (const label of labelsToRestore) {
-      newThread.addLabel(label);
-    }
-  } catch (e) {
-    console.warn(`[update] label re-apply failed: ${e}`);
-  }
+  updateDraftSubjectRaw(draft.getId(), cleanSubject);
 }

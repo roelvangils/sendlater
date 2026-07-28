@@ -278,7 +278,7 @@ Handig voor een wekelijkse review — staat er iets dat je toch niet meer wil ve
 <details>
 <summary>Wat als ik het label per ongeluk verwijder?</summary>
 <div class="faq-body">
-<p>De geplande verzending wordt geannuleerd. Bij de volgende trigger-run (binnen 5 minuten) wordt de bewaarde planning automatisch opgeruimd. Het concept blijft als concept in Mimestream staan — er gebeurt niks ermee.</p>
+<p>De geplande verzending wordt geannuleerd. Bij de volgende trigger-run (binnen 5 minuten) wordt de bewaarde planning automatisch opgeruimd: de <code>⏳ …</code>-prefix wordt uit het onderwerp verwijderd, en bij <span class="chip">Send Later/Custom</span> wordt het <code>[send: …]</code>-token teruggezet. Het concept blijft als concept in Mimestream staan — er wordt niets verstuurd.</p>
 <p>Je kunt het label gewoon opnieuw plakken om alsnog in te plannen, met dien verstande dat de tijd opnieuw berekend wordt op het moment van re-labelen.</p>
 </div>
 </details>
@@ -338,7 +338,7 @@ Handig voor een wekelijkse review — staat er iets dat je toch niet meer wil ve
 <details>
 <summary>Wat als verzenden mislukt (bv. quotum overschreden)?</summary>
 <div class="faq-body">
-<p>Dan krijg je een <code>[sendlater] Send failed</code>-mail in je inbox met de foutmelding. Het concept blijft staan en het script probeert opnieuw bij de volgende trigger-run.</p>
+<p>Dan krijg je een <code>[sendlater] Send failed</code>-mail in je inbox met de foutmelding — één mail per concept, niet één per poging. Het concept blijft staan en het script probeert stilletjes opnieuw bij elke volgende trigger-run (zie het Executions-tabblad in de IDE voor de pogingen).</p>
 <p>De meest voorkomende oorzaak is het dagelijks quotum: 100 mails/dag op gratis Gmail, 1500 op Workspace. Het quotum reset elke 24 uur.</p>
 </div>
 </details>
@@ -346,9 +346,8 @@ Handig voor een wekelijkse review — staat er iets dat je toch niet meer wil ve
 <details>
 <summary>Wat als ik twee Send Later/*-labels tegelijk plak?</summary>
 <div class="faq-body">
-<p>Officieel: ongedefinieerd. Praktisch: meestal wint het label dat je het laatst plakte, maar daar kan je niet op rekenen.</p>
-<p>Het script pakt de <em>eerste</em> matchende label uit <code>thread.getLabels()</code>. De Gmail-API documenteert die volgorde niet en ze kan zelfs tussen trigger-runs verschuiven.</p>
-<p>Concreet voorbeeld: een draft met zowel <span class="chip">Send Later/Morning</span> <em>als</em> <span class="chip">Send Later/Tomorrow</span> kan vandaag om 08:23 vertrekken (Morning won) of morgen om 09:00 (Tomorrow won) — roulette. Plak dus altijd maar één tijdslabel.</p>
+<p>Eén label wint, in een vaste prioriteitsvolgorde: <span class="chip">Tonight</span> → <span class="chip">Morning</span> → <span class="chip">Tomorrow</span> → <span class="chip">Monday</span> → <span class="chip">Custom</span> → <span class="chip">Test</span>.</p>
+<p>Concreet voorbeeld: een draft met zowel <span class="chip">Send Later/Morning</span> <em>als</em> <span class="chip">Send Later/Tomorrow</span> vertrekt in het ochtendslot — Morning gaat vóór Tomorrow. De rest wordt gewoon genegeerd. Plak toch maar één tijdslabel; de prioriteitsvolgorde is een implementatiedetail, geen feature.</p>
 <p>Uitzondering: <span class="chip">Send Later/Hold</span> mag wél naast een tijdslabel staan. Hold wordt behandeld als een schakelaar, niet als een tijdsregel (zie hierboven) — wanneer Hold aanwezig is, slaat het script de draft volledig over.</p>
 </div>
 </details>

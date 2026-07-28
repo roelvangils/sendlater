@@ -3,6 +3,14 @@ interface ScheduledState {
   label: string;
   warned?: boolean;
   subjectHash?: string;
+  // Set after the first "Send failed" notification so retries don't mail the
+  // owner on every tick. Cleared implicitly when the draft is re-planned.
+  failNotified?: boolean;
+  // For Custom drafts: the full "[send: …]" token as it appeared in the
+  // subject. The visibility prefix strips the token from the subject, so this
+  // is the surviving copy — used to re-plan and to restore the subject when
+  // the label is removed.
+  customToken?: string;
 }
 
 const STATE_PREFIX = "sched:";

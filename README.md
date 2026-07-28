@@ -57,6 +57,9 @@ Send Later/
 Apply just one `Send Later/…` label per draft. `Hold` is the exception — combine
 it with a timing label to pause; remove `Hold` to resume with the original time.
 
+Note: `Monday` always means the *next* Monday — labeling on a Monday morning
+schedules for a week later, not the same day at 09:00.
+
 ## Custom datetime token
 
 For one-off times, use `Send Later/Custom` and put a token at the start of the
@@ -76,7 +79,10 @@ subject:
 Unparseable token → you get a `[sendlater]` notification mail. Fix the subject,
 the next run picks it up.
 
-The token is stripped from the subject before the mail goes out.
+The token is stripped from the subject as soon as the draft is scheduled (the
+⏳ prefix shows the resolved time instead) and kept in script state. If you
+remove the label, the next run restores the token to the subject, so you can
+edit it and relabel. The recipient never sees it.
 
 ## Prerequisites
 
@@ -127,6 +133,11 @@ In the Apps Script web IDE:
 
 That's it. From now on, label a draft and forget about it.
 
+The manifest enables the **Gmail advanced service** (used for raw-MIME draft
+updates and sending); `clasp push` configures it automatically — nothing to
+toggle by hand. If you're updating from an older version, the next run may ask
+you to re-authorize once.
+
 > **First-time OAuth consent**: Google will show an "unverified app" warning
 > because the script isn't published. Click **Advanced → Go to "Send Later"
 > (unsafe)** to grant the `gmail.modify` scope. For Google Workspace
@@ -140,6 +151,8 @@ That's it. From now on, label a draft and forget about it.
 - `src/scheduler.ts` — main loop (`processScheduledDrafts`), driven by the trigger.
 - `src/parser.ts` — custom datetime parser (ISO, relative, weekday).
 - `src/subject.ts` — visibility prefix apply / strip on send.
+- `src/rawupdate.ts` — subject-only draft updates via the Gmail API's raw MIME
+  (preserves CC/BCC, attachments, inline images and emoji).
 - `src/notifications.ts` — `notifyOwner` (failure mail to yourself).
 - `src/state.ts` — `PropertiesService` wrapper + subject hash.
 - `src/setup.ts` — one-time helpers (`installTrigger`, `ensureLabels`).
@@ -160,7 +173,9 @@ That's it. From now on, label a draft and forget about it.
   the trigger isn't installed (run `installTrigger` once).
 - **`[sendlater] Send failed: Quota exceeded`.** Free Gmail caps at 100
   sends/day, Workspace at 1500. Quota resets at midnight Pacific time. The
-  draft stays in your queue and retries automatically.
+  draft stays in your queue and retries automatically. You get one failure
+  mail per draft, not one per retry — follow later attempts in the
+  Executions tab.
 - **You see "Another run is in progress; skipping this tick." in the log.**
   That's normal — `LockService` is preventing overlap. The next tick will
   pick up where this one left off.
@@ -190,8 +205,9 @@ are involved.
   attachments — to send them on schedule. Same things any mail client
   reads.
 - **State in `PropertiesService`** contains only draft IDs, planned
-  timestamps, label names, and short MD5 hashes of subjects (for parse-
-  failure throttling). No message content, no recipient addresses.
+  timestamps, label names, short MD5 hashes of subjects (for parse-failure
+  throttling), and for `Custom` drafts the `[send: …]` token text. No message
+  content beyond that token, no recipient addresses.
 - **Notifications** (`[sendlater] …`) go to your own Gmail inbox via
   `MailApp`. They never leave your account.
 - **OAuth scope**: `gmail.modify` (read, send, label) plus
@@ -224,5 +240,10 @@ The `docs/` folder is the committed build output served by GitHub Pages at https
 
 - Free Gmail: 100 sends/day via `GmailApp`. Workspace: 1500. Per-account.
 - Trigger granularity: 5 min, so actual send = planned ± 5 min.
-- One `Send Later/…` label per draft. If you stack two by accident, the script
-  picks the first one Gmail returns (unpredictable). Use one.
+- One `Send Later/…` label per draft. If you stack two by accident, one wins
+  by fixed priority (Tonight → Morning → Tomorrow → Monday → Custom → Test).
+  Use one.
+- Gmail labels live on *threads*: labeling a conversation that contains a
+  draft reply schedules that draft. After a send, the script removes the
+  `Send Later/*` labels from the thread so a later reply draft isn't
+  re-captured.
