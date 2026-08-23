@@ -96,7 +96,7 @@ Plak één label per concept. Combineer eventueel met <span class="chip">Send La
 <div class="label-card">
 <div class="label-card-header"><span class="chip">Send Later/Hold</span></div>
 <p><strong>Wat:</strong> pauzeer een geplande mail zonder de planning te verliezen.</p>
-<p><strong>Wanneer:</strong> je hebt een mail klaargezet voor morgen maar twijfelt nog. Plak <code>Hold</code> erbij — het script slaat de mail over zolang dit label aanwezig is. Haal <code>Hold</code> weg en de mail vertrekt alsnog op het oorspronkelijk geplande tijdstip.</p>
+<p><strong>Wanneer:</strong> je hebt een mail klaargezet voor morgen maar twijfelt nog. Plak <code>Hold</code> erbij — het script slaat de mail over zolang dit label aanwezig is. Haal <code>Hold</code> weg en de mail vertrekt alsnog op het oorspronkelijk geplande tijdstip — of, als dat tijdstip ondertussen voorbij is, wordt hij opnieuw ingepland volgens zijn tijdslabel (een mail die een week in de wacht stond vertrekt dus niet meteen als je hem loslaat).</p>
 </div>
 
 <div class="label-card">

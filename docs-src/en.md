@@ -96,7 +96,7 @@ Apply one label per draft. Optionally combine with <span class="chip">Send Later
 <div class="label-card">
 <div class="label-card-header"><span class="chip">Send Later/Hold</span></div>
 <p><strong>What:</strong> Pause a scheduled mail without losing the planning.</p>
-<p><strong>When:</strong> You've prepared a mail for tomorrow but you're still on the fence. Slap <code>Hold</code> on it — the script skips the mail as long as this label is present. Remove <code>Hold</code> and the mail still goes out at the originally planned time.</p>
+<p><strong>When:</strong> You've prepared a mail for tomorrow but you're still on the fence. Slap <code>Hold</code> on it — the script skips the mail as long as this label is present. Remove <code>Hold</code> and the mail still goes out at the originally planned time — or, if that time has meanwhile passed, it's re-planned from its time label (so a mail held for a week doesn't fire the moment you release it).</p>
 </div>
 
 <div class="label-card">

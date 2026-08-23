@@ -55,7 +55,9 @@ Send Later/
 ```
 
 Apply just one `Send Later/…` label per draft. `Hold` is the exception — combine
-it with a timing label to pause; remove `Hold` to resume with the original time.
+it with a timing label to pause; remove `Hold` to resume with the original time
+(if that time has meanwhile passed, the draft is re-planned from its label
+instead of being sent immediately).
 
 Note: `Monday` always means the *next* Monday — labeling on a Monday morning
 schedules for a week later, not the same day at 09:00.

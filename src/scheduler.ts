@@ -24,6 +24,7 @@ function processScheduledDrafts(): void {
 
       if (labelNames.indexOf(HOLD_LABEL) !== -1) {
         seenIds.add(id);
+        markHeld(id);
         continue;
       }
 
@@ -73,6 +74,18 @@ function handleDraft(
     return;
   }
 
+  // Hold was just removed. "Resume with the original time" only makes sense
+  // if that time is still ahead of us; otherwise re-plan from the label so a
+  // draft paused for a week doesn't fire the instant Hold comes off.
+  if (state.held) {
+    if (!state.warned && now >= state.plannedAt) {
+      planAndApply(draft, id, labelName, isCustom, state);
+      return;
+    }
+    state = { ...state, held: false };
+    setScheduled(id, state);
+  }
+
   if (state.warned) {
     const currentHash = hashSubject(draft.getMessage().getSubject());
     if (state.subjectHash !== currentHash) {
@@ -99,7 +112,9 @@ function planAndApply(
   isCustom: boolean,
   priorState: ScheduledState | null
 ): void {
-  const currentSubject = draft.getMessage().getSubject();
+  const message = draft.getMessage();
+  const currentSubject = message.getSubject();
+  const threadId = message.getThread().getId();
 
   // The visibility prefix strips the [send: …] token from the subject, so on
   // re-plans (label removed and re-applied, or switched away and back) the
@@ -121,6 +136,7 @@ function planAndApply(
       warned: true,
       subjectHash: hashSubject(currentSubject),
       customToken,
+      threadId,
     });
     notifyOwner(
       "Could not parse [send: …] token",
@@ -136,6 +152,7 @@ function planAndApply(
     plannedAt: plannedAt.getTime(),
     label: labelName,
     customToken,
+    threadId,
   });
   console.log(
     `Scheduled draft ${id} (label "${labelName}") for ${plannedAt.toISOString()}`
@@ -190,28 +207,44 @@ function removeSendLaterLabels(threadId: string | undefined): void {
   }
 }
 
+function markHeld(id: string): void {
+  const state = getScheduled(id);
+  if (state && !state.held) setScheduled(id, { ...state, held: true });
+}
+
 function cleanupOrphans(activeIds: Set<string>): void {
   for (const id of allScheduledIds()) {
     if (activeIds.has(id)) continue;
-    restoreUnlabeledDraft(id, getScheduled(id));
+    const state = getScheduled(id);
+    const draft = findDraft(id);
+    if (draft) {
+      restoreUnlabeledDraft(draft, state);
+    } else {
+      // Draft gone: sent by hand from the client, or discarded. Either way
+      // the Send Later label has no business staying on the thread.
+      removeSendLaterLabels(state?.threadId);
+    }
     deleteScheduled(id);
     console.log(`Cleaned up orphan state for draft ${id}`);
   }
 }
 
-// A draft with state but no Send Later label was either sent/deleted (draft
-// gone — nothing to do) or deliberately unlabeled. In the latter case, put
+function findDraft(id: string): GoogleAppsScript.Gmail.GmailDraft | null {
+  try {
+    return GmailApp.getDraft(id) ?? null;
+  } catch (_) {
+    return null;
+  }
+}
+
+// A draft with state but no Send Later label was deliberately unlabeled. Put
 // the subject back the way the user wrote it: strip the ⏳ prefix and, for
 // Custom drafts, re-insert the [send: …] token so relabeling works.
-function restoreUnlabeledDraft(id: string, state: ScheduledState | null): void {
-  let draft: GoogleAppsScript.Gmail.GmailDraft;
-  try {
-    draft = GmailApp.getDraft(id);
-    if (!draft) return;
-  } catch (_) {
-    return;
-  }
-
+function restoreUnlabeledDraft(
+  draft: GoogleAppsScript.Gmail.GmailDraft,
+  state: ScheduledState | null
+): void {
+  const id = draft.getId();
   try {
     const currentSubject = draft.getMessage().getSubject();
     let restored = stripPrefixes(currentSubject, false);

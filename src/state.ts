@@ -11,6 +11,15 @@ interface ScheduledState {
   // is the surviving copy — used to re-plan and to restore the subject when
   // the label is removed.
   customToken?: string;
+  // Thread the draft lives in. Lets cleanupOrphans strip the Send Later
+  // labels from the thread even after the draft itself is gone (sent by hand
+  // from the client, or discarded) — otherwise the label lingers on the thread
+  // and silently schedules the next reply draft written in it.
+  threadId?: string;
+  // Set while the draft carries the Hold label. When Hold is removed and the
+  // planned time has meanwhile passed, the draft is re-planned from its
+  // timing label instead of being sent immediately.
+  held?: boolean;
 }
 
 const STATE_PREFIX = "sched:";

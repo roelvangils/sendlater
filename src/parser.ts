@@ -39,15 +39,38 @@ function parseCustomToken(subject: string): Date | null {
 function tryIsoDatetime(expr: string): Date | null {
   const m = expr.match(/^(\d{4})-(\d{1,2})-(\d{1,2})[T\s](\d{1,2}):(\d{2})$/);
   if (!m) return null;
-  const d = new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], 0, 0);
-  return isValidFutureDate(d) ? d : null;
+  const d = makeDate(+m[1], +m[2], +m[3], +m[4], +m[5]);
+  return d && isValidFutureDate(d) ? d : null;
 }
 
 function tryIsoDate(expr: string): Date | null {
   const m = expr.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
   if (!m) return null;
-  const d = new Date(+m[1], +m[2] - 1, +m[3], DEFAULT_SEND_HOUR, 0, 0, 0);
-  return isValidFutureDate(d) ? d : null;
+  const d = makeDate(+m[1], +m[2], +m[3], DEFAULT_SEND_HOUR, 0);
+  return d && isValidFutureDate(d) ? d : null;
+}
+
+// new Date(y, m, d, h, min) silently rolls out-of-range fields over (Feb 30
+// → Mar 2, 25:99 → next day 02:39). Reject anything that doesn't round-trip
+// so the user gets a parse-fail notification instead of a surprise send time.
+function makeDate(
+  year: number,
+  month: number,
+  day: number,
+  hour: number,
+  minute: number
+): Date | null {
+  if (!isValidTime(hour, minute)) return null;
+  const d = new Date(year, month - 1, day, hour, minute, 0, 0);
+  const ok =
+    d.getFullYear() === year &&
+    d.getMonth() === month - 1 &&
+    d.getDate() === day;
+  return ok ? d : null;
+}
+
+function isValidTime(hour: number, minute: number): boolean {
+  return hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59;
 }
 
 function tryRelative(expr: string): Date | null {
@@ -72,6 +95,7 @@ function tryWeekday(expr: string): Date | null {
   if (day === undefined) return null;
   const hour = m[2] ? parseInt(m[2], 10) : DEFAULT_SEND_HOUR;
   const min = m[3] ? parseInt(m[3], 10) : 0;
+  if (!isValidTime(hour, min)) return null;
   return nextWeekday(day, hour, min);
 }
 
@@ -80,6 +104,7 @@ function tryTomorrowExpr(expr: string): Date | null {
   if (!m) return null;
   const hour = m[1] ? parseInt(m[1], 10) : DEFAULT_SEND_HOUR;
   const min = m[2] ? parseInt(m[2], 10) : 0;
+  if (!isValidTime(hour, min)) return null;
   return atHourTomorrow(hour, min);
 }
 
