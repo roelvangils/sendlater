@@ -19,7 +19,7 @@ function updateDraftSubjectRaw(draftId: string, newSubject: string): void {
     throw new Error(`Draft ${draftId}: raw message unavailable`);
   }
 
-  const bytes = Utilities.base64DecodeWebSafe(message.raw);
+  const bytes = rawToBytes(message.raw);
 
   // Split headers from body at the first CRLFCRLF. Only the header block is
   // ever decoded/re-encoded as text; body bytes pass through untouched, so
@@ -36,19 +36,53 @@ function updateDraftSubjectRaw(draftId: string, newSubject: string): void {
     .getBytes()
     .concat(bodyBytes);
 
-  Gmail.Users!.Drafts!.update(
+  const updated = Gmail.Users!.Drafts!.update(
     {
       message: {
         raw: Utilities.base64EncodeWebSafe(newBytes),
-        // Preserve thread membership and labels explicitly; without these the
-        // updated message would come back with only the DRAFT label.
+        // Preserve thread membership explicitly. Labels can't be passed here
+        // any more (the API now rejects it with "Cannot set labels on
+        // drafts"), so they are re-applied below if the update dropped them.
         threadId: message.threadId,
-        labelIds: message.labelIds,
       },
     },
     "me",
     draftId
   );
+
+  restoreLabels(message.labelIds ?? [], updated.message);
+}
+
+// Re-apply any user labels the update stripped off the draft's message.
+// Losing "Send Later/…" here would make the next tick treat the draft as
+// unlabeled and unschedule it.
+function restoreLabels(
+  wanted: string[],
+  updatedMessage: GoogleAppsScript.Gmail.Schema.Message | undefined
+): void {
+  if (!updatedMessage || !updatedMessage.id) return;
+  const have = updatedMessage.labelIds ?? [];
+  const missing = wanted.filter(
+    (l) => l !== "DRAFT" && l !== "UNREAD" && have.indexOf(l) === -1
+  );
+  if (missing.length === 0) return;
+  Gmail.Users!.Messages!.modify(
+    { addLabelIds: missing },
+    "me",
+    updatedMessage.id
+  );
+}
+
+// The Gmail API documents `raw` as a web-safe base64 string, and that is what
+// the Advanced Service returned until mid-2026. It now hands back the decoded
+// bytes as an array (observed 2026-08-23: "Could not decode string" on every
+// subject update). Accept both so the next flip doesn't break sends again.
+function rawToBytes(raw: unknown): number[] {
+  if (typeof raw === "string") return Utilities.base64DecodeWebSafe(raw);
+  if (Array.isArray(raw) && raw.every((b) => typeof b === "number")) {
+    return raw as number[];
+  }
+  throw new Error(`Unexpected type for message.raw: ${typeof raw}`);
 }
 
 function findHeaderBodySplit(bytes: number[]): number {
